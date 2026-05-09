@@ -208,7 +208,7 @@ function initCart() {
         });
     });
 
-    checkoutBtn.addEventListener('click', function() {
+    checkoutBtn.addEventListener('click', async function() {
         if (cartState.items.length === 0) {
             showNotification('Your cart is empty. Add items first.');
             return;
@@ -220,7 +220,26 @@ function initCart() {
         }
 
         if (selectedPaymentMethod === 'stripe') {
-            handleStripeCheckout();
+            try {
+                const response = await fetch("/api/pay", {
+                  method: "POST",
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ items: cartState.items })
+                });
+
+                const data = await response.json();
+
+                if (data.url) {
+                  showNotification('Redirecting to Stripe...');
+                  window.location.href = data.url;
+                } else {
+                  showNotification("Stripe payment error: " + (data.error || "Unknown error"));
+                }
+            } catch (error) {
+                showNotification("Stripe payment error: " + error.message);
+            }
             return;
         }
 
@@ -420,3 +439,21 @@ registerForm.addEventListener('submit', function(e) {
     registerMessage.style.color = '#4caf50';
     setTimeout(() => openLoginFromRegister(), 2000);
 });
+
+const payButton = document.getElementById("pay-button");
+
+if (payButton) {
+  payButton.addEventListener("click", async () => {
+    const response = await fetch("/api/pay", {
+      method: "POST",
+    });
+
+    const data = await response.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Payment error: " + data.error);
+    }
+  });
+}

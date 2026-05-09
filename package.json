@@ -1,0 +1,26 @@
+{
+  "name": "hirukobluesky",
+  "version": "1.0.0",
+  "description": "Laman web statik ini dibina menggunakan `index.html`, `styles.css`, dan `script.js`.\r Ia sesuai untuk dihoskan di perkhidmatan hosting statik seperti GitHub Pages, Netlify, Vercel, atau Exabytes.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Petirking/hirukoyuki-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Petirking/hirukoyuki-website/issues"
+  },
+  "homepage": "https://github.com/Petirking/hirukoyuki-website#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "stripe": "^22.1.1"
+  }
+}
