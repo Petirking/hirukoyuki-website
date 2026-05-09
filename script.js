@@ -49,7 +49,7 @@ function updateCartCount() {
 }
 
 function formatCurrency(value) {
-    return `$${value.toFixed(2)}`;
+    return `RM${value.toFixed(2)}`;
 }
 
 function renderCartItems() {
