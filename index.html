@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiruko Yuki Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1>HIRUKO YUKI</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#cart" class="cart-icon">🛒<span class="cart-count">0</span></a></li>
+                <li><button type="button" id="loginBtn" class="btn btn-outline">Login</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Discover Our Collection</h2>
+            <p>Minimalist design meets quality craftsmanship</p>
+            <a href="#shop" class="btn btn-primary">Explore Now</a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="shop" class="featured">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+
+            <div class="product-list">
+                <h3 class="list-title">Quick Add</h3>
+                <div class="list-group">
+                    <button type="button" class="product-line" data-name="Topup Semua Server" data-price="49.99">
+                        <div class="list-label">
+                            <span class="list-dot"></span>
+                            <span>Topup Semua Server</span>
+                        </div>
+                        <span class="list-price">$49.99</span>
+                    </button>
+                    <button type="button" class="product-line" data-name="Bundle Print" data-price="79.99">
+                        <div class="list-label">
+                            <span class="list-dot"></span>
+                            <span>Bundle Print</span>
+                        </div>
+                        <span class="list-price">$79.99</span>
+                    </button>
+                    <button type="button" class="product-line" data-name="Preset Editing" data-price="39.99">
+                        <div class="list-label">
+                            <span class="list-dot"></span>
+                            <span>Preset Editing</span>
+                        </div>
+                        <span class="list-price">$39.99</span>
+                    </button>
+                    <button type="button" class="product-line" data-name="Premium Apps" data-price="29.99">
+                        <div class="list-label">
+                            <span class="list-dot"></span>
+                            <span>Premium Apps</span>
+                        </div>
+                        <span class="list-price">$29.99</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder">Image 1</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Topup Semua Server</h3>
+                        <p class="price">$49.99</p>
+                        <p class="description">Topup Maxis, Celcom, XOX, Umobile, Digi dan lain-lain. Refund jika perkhidmatan tidak tersedia.</p>
+                        <button type="button" class="btn btn-outline" data-name="Topup Semua Server" data-price="49.99">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder">Image 2</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Bundle Print</h3>
+                        <p class="price">$79.99</p>
+                        <p class="description">Percetakan dokumen, nota, sticker, flyer dan poster. Proses pantas, berkualiti dan harga berpatutan.</p>
+                        <button type="button" class="btn btn-outline" data-name="Bundle Print" data-price="79.99">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder">Image 3</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Preset Editing</h3>
+                        <p class="price">$39.99</p>
+                        <p class="description">Servis edit foto/video ikut preset pilihan anda. Tiada watermark dan hasil lebih kemas.</p>
+                        <button type="button" class="btn btn-outline" data-name="Preset Editing" data-price="39.99">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder">Image 4</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Premium Apps</h3>
+                        <p class="price">$29.99</p>
+                        <p class="description">Netflix, YouTube Premium, Spotify, CapCut, Canva dan lain-lain. Stok bergantung pada pembekal.</p>
+                        <button type="button" class="btn btn-outline" data-name="Premium Apps" data-price="29.99">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details Section -->
+    <section id="product-details" class="details">
+        <div class="container">
+            <h2 class="section-title">Product Details</h2>
+            <div class="details-grid">
+                <article class="detail-card">
+                    <h3>Topup Semua Server</h3>
+                    <p class="detail-text">Topup Maxis, Celcom, XOX, Umobile, Digi dan lain-lain. Refund diberikan jika perkhidmatan tidak tersedia.</p>
+                    <p class="detail-meta">Servis topup untuk pelbagai penyedia prabayar Malaysia.</p>
+                </article>
+                <article class="detail-card">
+                    <h3>Bundle Print</h3>
+                    <p class="detail-text">Percetakan dokumen, nota, sticker, flyer dan poster. Proses pantas, hasil berkualiti dan harga berpatutan.</p>
+                    <p class="detail-meta">Penghantaran standard menggunakan surat; caj tambahan untuk penghantaran ekspres.</p>
+                </article>
+                <article class="detail-card">
+                    <h3>Preset Editing</h3>
+                    <p class="detail-text">Servis edit foto/video ikut preset kegemaran anda. Hasil kemas tanpa watermark.</p>
+                    <p class="detail-meta">Sesuai untuk gambar dan video dengan peningkatan kualiti sehingga lebih jelas.</p>
+                </article>
+                <article class="detail-card">
+                    <h3>Premium Apps</h3>
+                    <p class="detail-text">Netflix, YouTube Premium, Spotify, CapCut, Canva dan lebih lagi. Sila chat team dahulu: +601120500840.</p>
+                    <p class="detail-meta">Stok bergantung kepada pembekal. Refund diberikan jika tiada stok.</p>
+                </article>
+            </div>
+            <p class="details-note">This section is separate from the quick add list, so product descriptions can be expanded later without changing the main shopping layout.</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <h2>About Hiruko Yuki</h2>
+                <p>We believe in the power of simplicity. Every piece in our collection is thoughtfully designed with minimalist principles—focusing on quality, sustainability, and timeless style.</p>
+                <p>Our mission is to offer clothing that speaks for itself: no unnecessary details, just pure quality and comfort.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Stay Updated</h2>
+            <p>Subscribe for new releases and exclusive offers</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Sale</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Hiruko Yuki Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-overlay hidden"></div>
+    <aside class="cart-drawer hidden" id="cartDrawer" aria-label="Shopping cart">
+        <div class="cart-header">
+            <div>
+                <h2>My Cart</h2>
+                <p class="cart-subtitle">Review your selected items</p>
+            </div>
+            <button type="button" class="cart-close" aria-label="Close cart">×</button>
+        </div>
+        <div class="cart-items">
+            <p class="cart-empty">Your cart is empty.</p>
+        </div>
+        <div class="cart-payment">
+            <h3>Choose payment method</h3>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="payment-method" value="stripe">
+                    <span>Stripe</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment-method" value="touchngo">
+                    <span>Touch 'n Go eWallet</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment-method" value="manual">
+                    <span>Manual (wait for online reply)</span>
+                </label>
+            </div>
+            <p class="payment-note">Select a payment method before checkout.</p>
+        </div>
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span>Total</span>
+                <strong class="cart-total">$0.00</strong>
+            </div>
+            <button type="button" class="btn btn-primary checkout-btn">Checkout</button>
+        </div>
+    </aside>
+
+    <!-- Login Modal -->
+    <div class="login-modal hidden">
+        <div class="login-overlay"></div>
+        <div class="login-content">
+            <button type="button" class="login-close">&times;</button>
+            <h2>Login</h2>
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="login-identifier">Username/Email/Phone</label>
+                    <input type="text" id="login-identifier" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <div id="g_id_onload"
+                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                 data-callback="handleGoogleLogin">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>
+            <p class="login-message"></p>
+            <p>Don't have an account? <button type="button" id="registerLink" class="link-btn">Register here</button></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="register-modal hidden">
+        <div class="register-overlay"></div>
+        <div class="register-content">
+            <button type="button" class="register-close">&times;</button>
+            <h2>Register</h2>
+            <form class="register-form">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Phone Number</label>
+                    <input type="tel" id="register-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <div id="g_id_onload_register"
+                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                 data-callback="handleGoogleLogin">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>
+            <p class="register-message"></p>
+            <p>Already have an account? <button type="button" id="loginLink" class="link-btn">Login here</button></p>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="script.js"></script>
+</body>
+</html>
