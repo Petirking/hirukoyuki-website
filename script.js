@@ -325,15 +325,18 @@ function initCart() {
 
         if (selectedPaymentMethod === 'manual') {
             const messageLines = ['Hii Yukiee! 👋', 'Saya nak buat order:', ''];
-            cartState.items.forEach(item => {
+            const totalAmount = cartState.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+            cartState.items.forEach((item, index) => {
                 const productId = item.productId || getProductId(item.name);
-                messageLines.push(`Product: ${item.name}`);
+                messageLines.push(`${index + 1}. ${item.name}`);
                 messageLines.push(`Price: RM${item.price}`);
                 messageLines.push(`Quantity: ${item.quantity}`);
-                messageLines.push('Payment: Manual Payment');
                 messageLines.push(`Product ID: ${productId}`);
                 messageLines.push('');
             });
+            messageLines.push('Payment: Manual Payment');
+            messageLines.push(`Total Amount: RM${totalAmount.toFixed(2).replace(/\.00$/, '')}`);
+            messageLines.push('');
             messageLines.push('Terima kasih 😊');
             const message = messageLines.join('\n');
             const encoded = encodeURIComponent(message);
