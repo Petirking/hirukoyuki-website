@@ -594,6 +594,47 @@ topupBack.addEventListener('click', function() {
 });
 topupOverlay.addEventListener('click', closeTopupModal);
 
+// Bundle Print Modal Functions
+const bundleprintModal = document.querySelector('.bundleprint-modal');
+const bundleprintOverlay = document.querySelector('.bundleprint-overlay');
+const bundleprintClose = document.querySelectorAll('.bundleprint-close, .bundleprint-close-btn');
+const bundleprintAddToCartBtn = document.getElementById('bundleprintAddToCart');
+
+let currentBundleprintSelection = {
+    name: 'Bundle Print',
+    price: 10,
+    quantity: 1
+};
+
+function openBundleprintModal() {
+    currentBundleprintSelection = {
+        name: 'Bundle Print',
+        price: 10,
+        quantity: 1
+    };
+    
+    bundleprintModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBundleprintModal() {
+    bundleprintModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Bundle Print add to cart
+bundleprintAddToCartBtn.addEventListener('click', function() {
+    addItemToCart(currentBundleprintSelection.name, currentBundleprintSelection.price, 1);
+    showNotification('Bundle Print added to cart. Please send your files via WhatsApp: +60 11 2050 0840');
+    closeBundleprintModal();
+});
+
+// Bundle Print modal controls
+bundleprintClose.forEach(btn => {
+    btn.addEventListener('click', closeBundleprintModal);
+});
+bundleprintOverlay.addEventListener('click', closeBundleprintModal);
+
 // Quick add buttons
 document.querySelectorAll('.quick-add-btn').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -602,6 +643,8 @@ document.querySelectorAll('.quick-add-btn').forEach(btn => {
         
         if (name === 'Topup Semua Server') {
             openTopupModal();
+        } else if (name === 'Bundle Print') {
+            openBundleprintModal();
         } else {
             openQuickAddModal(name, price);
         }
