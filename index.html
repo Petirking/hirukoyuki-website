@@ -74,9 +74,6 @@
             <div class="products-grid">
                 <!-- Product 1 -->
                 <div class="product-card">
-                    <div class="product-image">
-                        <div class="placeholder">Image 1</div>
-                    </div>
                     <div class="product-info">
                         <h3>Topup Semua Server</h3>
                         <p class="price">From RM5</p>
@@ -87,9 +84,6 @@
 
                 <!-- Product 2 -->
                 <div class="product-card">
-                    <div class="product-image">
-                        <div class="placeholder">Image 2</div>
-                    </div>
                     <div class="product-info">
                         <h3>Bundle Print</h3>
                         <p class="price">From RM10</p>
@@ -100,9 +94,6 @@
 
                 <!-- Product 3 -->
                 <div class="product-card">
-                    <div class="product-image">
-                        <div class="placeholder">Image 3</div>
-                    </div>
                     <div class="product-info">
                         <h3>Preset Editing</h3>
                         <p class="price">From RM1</p>
@@ -113,9 +104,6 @@
 
                 <!-- Product 4 -->
                 <div class="product-card">
-                    <div class="product-image">
-                        <div class="placeholder">Image 4</div>
-                    </div>
                     <div class="product-info">
                         <h3>Premium Apps</h3>
                         <p class="price">From RM2</p>
@@ -566,7 +554,7 @@
     <!-- Premium Apps Modal -->
     <div class="premium-apps-modal hidden">
         <div class="premium-apps-overlay"></div>
-        <div class="premium-apps-content">
+        <div class="premium-apps-content" style="max-height: 80vh; overflow-y: auto; padding: 20px;">
             <button type="button" class="premium-apps-close" aria-label="Close premium apps modal">×</button>
             
             <div class="premium-apps-body">
@@ -574,119 +562,90 @@
                 <p class="premium-apps-subtitle">Select the apps you want to add to your cart</p>
                 
                 <div class="apps-list">
-                    <!-- Video Editing Apps -->
-                    <div class="app-category">
-                        <h4 class="category-title">Video Editing</h4>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/FF6B6B/FFFFFF?text=CC" alt="CapCut Pro" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">CapCut Pro</span>
-                                    <span class="app-price">RM12.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="CapCut Pro" data-price="12">Add</button>
+                    <h3 class="category-title">Video Editing</h3>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">CapCut Pro</h4>
+                            <p class="app-price">RM12.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/4ECDC4/FFFFFF?text=AM" alt="Alight Motion Premium" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">Alight Motion Premium</span>
-                                    <span class="app-price">RM12.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="Alight Motion Premium" data-price="12">Add</button>
+                        <button type="button" class="app-add-btn" data-app="CapCut Pro" data-price="12">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">Alight Motion Premium</h4>
+                            <p class="app-price">RM12.00</p>
                         </div>
+                        <button type="button" class="app-add-btn" data-app="Alight Motion Premium" data-price="12">Add</button>
                     </div>
 
-                    <!-- Streaming & Music Apps -->
-                    <div class="app-category">
-                        <h4 class="category-title">Streaming & Music</h4>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/E74C3C/FFFFFF?text=N" alt="Netflix Premium" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">Netflix Premium</span>
-                                    <span class="app-price">RM15.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="Netflix Premium" data-price="15">Add</button>
+                    <h3 class="category-title">Streaming & Music</h3>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">Netflix Premium</h4>
+                            <p class="app-price">RM15.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/1E3A8A/FFFFFF?text=D+" alt="Disney+ Hotstar" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">Disney+ Hotstar</span>
-                                    <span class="app-price">RM14.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="Disney+ Hotstar" data-price="14">Add</button>
+                        <button type="button" class="app-add-btn" data-app="Netflix Premium" data-price="15">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">Disney+ Hotstar</h4>
+                            <p class="app-price">RM14.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/FF0000/FFFFFF?text=YT" alt="YouTube Premium" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">YouTube Premium</span>
-                                    <span class="app-price">RM5.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="YouTube Premium" data-price="5">Add</button>
+                        <button type="button" class="app-add-btn" data-app="Disney+ Hotstar" data-price="14">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">YouTube Premium</h4>
+                            <p class="app-price">RM5.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/FF0000/FFFFFF?text=YM" alt="YouTube Music" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">YouTube Music</span>
-                                    <span class="app-price">RM5.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="YouTube Music" data-price="5">Add</button>
+                        <button type="button" class="app-add-btn" data-app="YouTube Premium" data-price="5">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">YouTube Music</h4>
+                            <p class="app-price">RM5.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/1DB954/FFFFFF?text=S" alt="Spotify Premium" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">Spotify Premium</span>
-                                    <span class="app-price">RM10.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="Spotify Premium" data-price="10">Add</button>
+                        <button type="button" class="app-add-btn" data-app="YouTube Music" data-price="5">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">Spotify Premium</h4>
+                            <p class="app-price">RM10.00</p>
                         </div>
+                        <button type="button" class="app-add-btn" data-app="Spotify Premium" data-price="10">Add</button>
                     </div>
 
-                    <!-- Productivity & Communication Apps -->
-                    <div class="app-category">
-                        <h4 class="category-title">Productivity & Communication</h4>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/00C4CC/FFFFFF?text=C" alt="Canva Pro" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">Canva Pro</span>
-                                    <span class="app-price">RM2.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="Canva Pro" data-price="2">Add</button>
+                    <h3 class="category-title">Productivity & Communication</h3>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">Canva Pro</h4>
+                            <p class="app-price">RM2.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/10A37F/FFFFFF?text=CG" alt="ChatGPT Plus" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">ChatGPT Plus</span>
-                                    <span class="app-price">RM10.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="ChatGPT Plus" data-price="10">Add</button>
+                        <button type="button" class="app-add-btn" data-app="Canva Pro" data-price="2">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">ChatGPT Plus</h4>
+                            <p class="app-price">RM10.00</p>
                         </div>
-                        <div class="app-item">
-                            <div class="app-info">
-                                <img src="https://via.placeholder.com/40x40/0088CC/FFFFFF?text=TG" alt="Telegram Premium" class="app-icon">
-                                <div class="app-details">
-                                    <span class="app-name">Telegram Premium</span>
-                                    <span class="app-price">RM15.00</span>
-                                </div>
-                            </div>
-                            <button type="button" class="app-add-btn" data-app="Telegram Premium" data-price="15">Add</button>
+                        <button type="button" class="app-add-btn" data-app="ChatGPT Plus" data-price="10">Add</button>
+                    </div>
+                    <div class="app-item">
+                        <div class="app-image-space"></div>
+                        <div class="app-content">
+                            <h4 class="app-title">Telegram Premium</h4>
+                            <p class="app-price">RM15.00</p>
                         </div>
+                        <button type="button" class="app-add-btn" data-app="Telegram Premium" data-price="15">Add</button>
                     </div>
                 </div>
 
