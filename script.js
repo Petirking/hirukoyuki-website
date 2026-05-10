@@ -39,7 +39,7 @@ if (Object.keys(users).length === 0) {
     users = {
         'Hirukoyukiadmin.01': {
             email: 'hirukoyuki.01@gmail.com',
-            phone: '60112050840',
+            phone: '601120500840',
             password: 'PETIRKINGNO.1',
             role: 'admin'
         },
@@ -339,7 +339,7 @@ function initCart() {
             const encoded = encodeURIComponent(message);
             showNotification('Opening WhatsApp to connect with our team...');
             setTimeout(() => {
-                window.open(`https://wa.me/60112050840?text=${encoded}`, '_blank');
+                window.open(`https://wa.me/601120500840?text=${encoded}`, '_blank');
             }, 300);
             return;
         }
