@@ -441,6 +441,18 @@ let currentTopupSelection = {
     quantity: 1
 };
 
+// Bundle Print Modal functionality
+const bundlePrintModal = document.querySelector('.bundle-print-modal');
+const bundlePrintOverlay = document.querySelector('.bundle-print-overlay');
+const bundlePrintClose = document.querySelector('.bundle-print-close');
+const bundlePrintCancel = document.querySelector('.bundle-print-cancel');
+const bundlePrintQtyInput = document.getElementById('bundlePrintQty');
+const bundlePrintQtyDecrease = document.querySelector('.qty-decrease-bundle');
+const bundlePrintQtyIncrease = document.querySelector('.qty-increase-bundle');
+const bundlePrintAddToCartBtn = document.getElementById('bundlePrintAddToCart');
+
+let bundlePrintQuantity = 1;
+
 function openQuickAddModal(name, price) {
     currentQuickAddProduct.name = name;
     currentQuickAddProduct.price = price;
@@ -594,6 +606,55 @@ topupBack.addEventListener('click', function() {
 });
 topupOverlay.addEventListener('click', closeTopupModal);
 
+// Bundle Print Modal Functions
+function openBundlePrintModal() {
+    bundlePrintQuantity = 1;
+    bundlePrintQtyInput.value = 1;
+    bundlePrintModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBundlePrintModal() {
+    bundlePrintModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Bundle Print modal controls
+bundlePrintClose.addEventListener('click', closeBundlePrintModal);
+bundlePrintCancel.addEventListener('click', closeBundlePrintModal);
+bundlePrintOverlay.addEventListener('click', closeBundlePrintModal);
+
+bundlePrintQtyDecrease.addEventListener('click', function() {
+    let qty = parseInt(bundlePrintQtyInput.value) || 1;
+    if (qty > 1) {
+        bundlePrintQtyInput.value = qty - 1;
+        bundlePrintQuantity = qty - 1;
+    }
+});
+
+bundlePrintQtyIncrease.addEventListener('click', function() {
+    let qty = parseInt(bundlePrintQtyInput.value) || 1;
+    if (qty < 999) {
+        bundlePrintQtyInput.value = qty + 1;
+        bundlePrintQuantity = qty + 1;
+    }
+});
+
+bundlePrintQtyInput.addEventListener('change', function() {
+    let qty = parseInt(this.value) || 1;
+    if (qty < 1) qty = 1;
+    if (qty > 999) qty = 999;
+    this.value = qty;
+    bundlePrintQuantity = qty;
+});
+
+bundlePrintAddToCartBtn.addEventListener('click', function() {
+    const qty = parseInt(bundlePrintQtyInput.value) || 1;
+    addItemToCart('Bundle Print', 10, qty);
+    showNotification('Bundle Print added to cart 🛒');
+    closeBundlePrintModal();
+});
+
 // Quick add buttons
 document.querySelectorAll('.quick-add-btn').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -602,6 +663,8 @@ document.querySelectorAll('.quick-add-btn').forEach(btn => {
         
         if (name === 'Topup Semua Server') {
             openTopupModal();
+        } else if (name === 'Bundle Print') {
+            openBundlePrintModal();
         } else {
             openQuickAddModal(name, price);
         }

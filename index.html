@@ -386,6 +386,65 @@
         </div>
     </div>
 
+    <!-- Bundle Print Modal -->
+    <div class="bundle-print-modal hidden">
+        <div class="bundle-print-overlay"></div>
+        <div class="bundle-print-content">
+            <button type="button" class="bundle-print-close" aria-label="Close bundle print modal">×</button>
+            
+            <div class="bundle-print-body">
+                <h2 class="bundle-print-title">Bundle Print - Send Your Files</h2>
+                <p class="bundle-print-subtitle">Share your design or files for printing</p>
+                
+                <div class="bundle-print-section">
+                    <h3>How to Order</h3>
+                    <ol class="bundle-print-steps">
+                        <li><strong>Add to Cart:</strong> Select your Bundle Print option and add to cart</li>
+                        <li><strong>Send Files:</strong> Contact us via WhatsApp to send your design or files</li>
+                        <li><strong>Confirm Details:</strong> Confirm printing specifications (size, quantity, material)</li>
+                        <li><strong>Complete Payment:</strong> Pay through your preferred method</li>
+                        <li><strong>Receive Order:</strong> Get your printed items via delivery</li>
+                    </ol>
+                </div>
+
+                <div class="bundle-print-contact">
+                    <h3>WhatsApp Contact:</h3>
+                    <a href="https://wa.me/60112050084" target="_blank" class="bundle-print-whatsapp">
+                        <span class="whatsapp-emoji">💬</span>
+                        <span class="whatsapp-text">+60 11 2050 0840</span>
+                    </a>
+                    <p class="bundle-print-note">Click to chat on WhatsApp or copy the number to contact us directly</p>
+                </div>
+
+                <div class="bundle-print-formats">
+                    <h3>Accepted File Formats:</h3>
+                    <div class="format-badges">
+                        <span class="format-badge">PDF</span>
+                        <span class="format-badge">JPG</span>
+                        <span class="format-badge">PNG</span>
+                        <span class="format-badge">AI</span>
+                        <span class="format-badge">PSD</span>
+                        <span class="format-badge">CDR</span>
+                    </div>
+                </div>
+
+                <div class="bundle-print-quantity">
+                    <label for="bundlePrintQty">Quantity</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-btn qty-decrease-bundle">−</button>
+                        <input type="number" id="bundlePrintQty" value="1" min="1" max="999">
+                        <button type="button" class="qty-btn qty-increase-bundle">+</button>
+                    </div>
+                </div>
+
+                <div class="bundle-print-actions">
+                    <button type="button" id="bundlePrintAddToCart" class="btn btn-primary">Add to Cart</button>
+                    <button type="button" class="bundle-print-cancel btn btn-outline">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Modal -->
     <div class="login-modal hidden">
         <div class="login-overlay"></div>
