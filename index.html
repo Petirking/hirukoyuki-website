@@ -26,8 +26,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h2>Discover Our Collection</h2>
-            <p>Minimalist design meets quality craftsmanship</p>
+            <h2>Premium Digital Services</h2>
+            <p>Fast, secure and affordable digital products.</p>
             <a href="#shop" class="btn btn-primary">Explore Now</a>
         </div>
     </section>
@@ -78,7 +78,7 @@
                         <h3>Topup Semua Server</h3>
                         <p class="price">From RM5</p>
                         <p class="description">Topup Maxis, Celcom, XOX, Umobile, Digi dan lain-lain. Refund jika perkhidmatan tidak tersedia.</p>
-                        <button type="button" class="btn btn-outline" data-name="Topup Semua Server" data-price="25">Add to Cart</button>
+                        <button type="button" class="btn btn-outline" data-name="Topup Semua Server" data-price="25" onclick="window.location.href='topup.html'">Select Top Up</button>
                     </div>
                 </div>
 
@@ -88,7 +88,7 @@
                         <h3>Bundle Print</h3>
                         <p class="price">From RM10</p>
                         <p class="description">Percetakan dokumen, nota, sticker, flyer dan poster. Proses pantas, berkualiti dan harga berpatutan.</p>
-                        <button type="button" class="btn btn-outline" data-name="Bundle Print" data-price="10">Add to Cart</button>
+                        <button type="button" class="btn btn-outline" data-name="Bundle Print" data-price="10">Explore Packages</button>
                     </div>
                 </div>
 
@@ -98,7 +98,7 @@
                         <h3>Preset Editing</h3>
                         <p class="price">From RM1</p>
                         <p class="description">Servis edit foto/video ikut preset pilihan anda. Tiada watermark dan hasil lebih kemas.</p>
-                        <button type="button" class="btn btn-outline" data-name="Preset Editing" data-price="1">Add to Cart</button>
+                        <button type="button" class="btn btn-outline" data-name="Preset Editing" data-price="1">Explore Styles</button>
                     </div>
                 </div>
 
@@ -108,7 +108,7 @@
                         <h3>Premium Apps</h3>
                         <p class="price">From RM2</p>
                         <p class="description">Netflix, YouTube Premium, Spotify, CapCut, Canva dan lain-lain. Stok bergantung pada pembekal.</p>
-                        <button type="button" class="btn btn-outline" data-name="Premium Apps" data-price="2">Add to Cart</button>
+                        <button type="button" class="btn btn-outline" data-name="Premium Apps" data-price="2">View Options</button>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,6 @@
                     <p class="detail-meta">Stok bergantung kepada pembekal. Refund diberikan jika tiada stok.</p>
                 </article>
             </div>
-            <p class="details-note">This section is separate from the quick add list, so product descriptions can be expanded later without changing the main shopping layout.</p>
         </div>
     </section>
 
@@ -150,8 +149,8 @@
         <div class="container">
             <div class="about-content">
                 <h2>About Hiruko Yuki</h2>
-                <p>We believe in the power of simplicity. Every piece in our collection is thoughtfully designed with minimalist principles—focusing on quality, sustainability, and timeless style.</p>
-                <p>Our mission is to offer clothing that speaks for itself: no unnecessary details, just pure quality and comfort.</p>
+                <p>We provide premium digital services designed for convenience and value. From mobile topups to preset editing, we deliver high-quality solutions with fast, secure transactions and competitive pricing.</p>
+                <p>Our mission is to make digital services accessible to everyone—reliable, transparent, and affordable.</p>
             </div>
         </div>
     </section>
@@ -175,25 +174,28 @@
                 <div class="footer-section">
                     <h3>Shop</h3>
                     <ul>
-                        <li><a href="#">New Arrivals</a></li>
-                        <li><a href="#">Best Sellers</a></li>
-                        <li><a href="#">Sale</a></li>
+                        <li><a href="#">Premium Apps</a></li>
+                        <li><a href="#">Topup Services</a></li>
+                        <li><a href="#">Bundle Printing</a></li>
+                        <li><a href="#">Preset Editing</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Support</h3>
                     <ul>
                         <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Shipping Info</a></li>
-                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Shipment & Delivery</a></li>
+                        <li><a href="#">FAQ</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Connect</h3>
                     <ul>
+                        <li><a href="#">Telegram Community</a></li>
                         <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Email</a></li>
+                        <li><a href="#">Review</a></li>
+                        <li><a href="#">E-mail Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -258,12 +260,12 @@
                     <span id="quickAddPrice" class="price-value">RM0.00</span>
                 </div>
 
-                <div class="quick-add-quantity">
+                <div class="quick-add-quantity quantity-block">
                     <label for="quickAddQty">Quantity</label>
                     <div class="quantity-selector">
-                        <button type="button" class="qty-btn qty-decrease">−</button>
+                        <button type="button" class="quantity-control qty-decrease">−</button>
                         <input type="number" id="quickAddQty" value="1" min="1" max="999">
-                        <button type="button" class="qty-btn qty-increase">+</button>
+                        <button type="button" class="quantity-control qty-increase">+</button>
                     </div>
                 </div>
 
@@ -336,12 +338,12 @@
                         </div>
                     </div>
 
-                    <div class="topup-qty">
+                    <div class="topup-qty quantity-block">
                         <label for="topupQty">Quantity</label>
                         <div class="quantity-selector">
-                            <button type="button" class="qty-btn qty-decrease-topup">−</button>
+                            <button type="button" class="quantity-control qty-decrease-topup">−</button>
                             <input type="number" id="topupQty" value="1" min="1" max="999">
-                            <button type="button" class="qty-btn qty-increase-topup">+</button>
+                            <button type="button" class="quantity-control qty-increase-topup">+</button>
                         </div>
                     </div>
 
@@ -489,68 +491,6 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div class="login-modal hidden">
-        <div class="login-overlay"></div>
-        <div class="login-content">
-            <button type="button" class="login-close">&times;</button>
-            <h2>Login</h2>
-            <form class="login-form">
-                <div class="form-group">
-                    <label for="login-identifier">Username/Email/Phone</label>
-                    <input type="text" id="login-identifier" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-            <div id="g_id_onload"
-                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                 data-callback="handleGoogleLogin">
-            </div>
-            <div class="g_id_signin" data-type="standard"></div>
-            <p class="login-message"></p>
-            <p>Don't have an account? <button type="button" id="registerLink" class="link-btn">Register here</button></p>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div class="register-modal hidden">
-        <div class="register-overlay"></div>
-        <div class="register-content">
-            <button type="button" class="register-close">&times;</button>
-            <h2>Register</h2>
-            <form class="register-form">
-                <div class="form-group">
-                    <label for="register-username">Username</label>
-                    <input type="text" id="register-username" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email</label>
-                    <input type="email" id="register-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-phone">Phone Number</label>
-                    <input type="tel" id="register-phone" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-password">Password</label>
-                    <input type="password" id="register-password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-            <div id="g_id_onload_register"
-                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                 data-callback="handleGoogleLogin">
-            </div>
-            <div class="g_id_signin" data-type="standard"></div>
-            <p class="register-message"></p>
-            <p>Already have an account? <button type="button" id="loginLink" class="link-btn">Login here</button></p>
-        </div>
-    </div>
-
     <!-- Premium Apps Modal -->
     <div class="premium-apps-modal hidden">
         <div class="premium-apps-overlay"></div>
@@ -653,6 +593,59 @@
                     <button type="button" class="premium-apps-cancel btn btn-outline">Cancel</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal hidden">
+        <div class="login-overlay"></div>
+        <div class="login-content">
+            <button type="button" class="login-close" aria-label="Close login modal">×</button>
+            <h2>Login</h2>
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="login-identifier">Username or Email</label>
+                    <input type="text" id="login-identifier" placeholder="Enter username or email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p class="login-message"></p>
+            <p class="or-divider">OR</p>
+            <p>Don't have an account? <button type="button" id="registerLink" class="link-btn">Register</button></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="register-modal hidden">
+        <div class="register-overlay"></div>
+        <div class="register-content">
+            <button type="button" class="register-close" aria-label="Close register modal">×</button>
+            <h2>Register</h2>
+            <form class="register-form">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Phone</label>
+                    <input type="tel" id="register-phone" placeholder="Enter your phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <p class="register-message"></p>
+            <p>Already have an account? <button type="button" id="loginLink" class="link-btn">Login</button></p>
         </div>
     </div>
 

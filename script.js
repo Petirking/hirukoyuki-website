@@ -4,7 +4,26 @@ const cartState = {
     items: [],
 };
 
-const users = JSON.parse(localStorage.getItem('users')) || {};
+let users = JSON.parse(localStorage.getItem('users')) || {};
+
+// Initialize demo accounts for testing
+if (Object.keys(users).length === 0) {
+    users = {
+        'Hirukoyukiadmin.01': {
+            email: 'hirukoyuki.01@gmail.com',
+            phone: '60112050840',
+            password: 'PETIRKINGNO.1',
+            role: 'admin'
+        },
+        'user': {
+            email: 'user@hiruko.com',
+            phone: '60112345678',
+            password: 'user123',
+            role: 'user'
+        }
+    };
+    localStorage.setItem('users', JSON.stringify(users));
+}
 
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
@@ -27,6 +46,7 @@ function handleGoogleLogin(response) {
         picture: payload.picture
     };
     saveCurrentUser();
+    updateLoginState();
     showNotification(`Welcome, ${payload.name}!`);
     closeLogin();
 }
@@ -262,6 +282,17 @@ function initCart() {
         }
 
         if (selectedPaymentMethod === 'stripe') {
+            // Calculate total amount for validation
+            const subtotal = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const fees = calculateFees(subtotal);
+            const total = fees.total;
+
+            // Minimum RM50 validation for Stripe
+            if (total < 50) {
+                showNotification(`Stripe payment requires a minimum of RM50.00. Current total: ${formatCurrency(total)}`);
+                return;
+            }
+
             try {
                 const response = await fetch("/api/pay", {
                   method: "POST",
@@ -275,9 +306,7 @@ function initCart() {
 
                 if (data.url) {
                   // Calculate and save total amount for success page
-                  const subtotal = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-                  const fees = calculateFees(subtotal);
-                  localStorage.setItem('lastCartTotal', formatCurrency(fees.total));
+                  localStorage.setItem('lastCartTotal', formatCurrency(total));
                   localStorage.setItem('lastSessionId', 'SID-' + Math.random().toString(36).substr(2, 9).toUpperCase());
                   
                   showNotification('Redirecting to Stripe...');
@@ -314,7 +343,7 @@ function updatePaymentNote() {
     if (!paymentNote) return;
 
     if (selectedPaymentMethod === 'stripe') {
-        paymentNote.textContent = 'Stripe is ready. After checkout, you will be redirected to a secure Stripe payment page.';
+        paymentNote.textContent = '⚠️ Stripe requires a minimum of RM50.00. You will be redirected to a secure Stripe payment page.';
         return;
     }
 
@@ -780,10 +809,6 @@ const registerForm = document.querySelector('.register-form');
 const registerMessage = document.querySelector('.register-message');
 const loginLink = document.getElementById('loginLink');
 
-function openLogin() {
-    loginModal.classList.remove('hidden');
-}
-
 function closeLogin() {
     loginModal.classList.add('hidden');
     loginForm.reset();
@@ -806,6 +831,33 @@ function openLoginFromRegister() {
     closeRegister();
 }
 
+function logout() {
+    currentUser = null;
+    saveCurrentUser();
+    updateLoginState();
+    showNotification('Logged out successfully.');
+}
+
+function updateLoginState() {
+    if (currentUser) {
+        loginBtn.textContent = `Logout (${currentUser.username || currentUser.email || 'User'})`;
+        loginBtn.classList.remove('btn-outline');
+        loginBtn.classList.add('btn-primary');
+    } else {
+        loginBtn.textContent = 'Login';
+        loginBtn.classList.remove('btn-primary');
+        loginBtn.classList.add('btn-outline');
+    }
+}
+
+function openLogin() {
+    if (currentUser) {
+        logout();
+        return;
+    }
+    loginModal.classList.remove('hidden');
+}
+
 loginBtn.addEventListener('click', openLogin);
 loginClose.addEventListener('click', closeLogin);
 loginOverlay.addEventListener('click', closeLogin);
@@ -814,6 +866,8 @@ registerLink.addEventListener('click', openRegister);
 registerClose.addEventListener('click', closeRegister);
 registerOverlay.addEventListener('click', closeRegister);
 loginLink.addEventListener('click', openLoginFromRegister);
+
+updateLoginState();
 
 loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -824,6 +878,7 @@ loginForm.addEventListener('submit', function(e) {
     if (user && user.password === password) {
         currentUser = { username: identifier, email: user.email, phone: user.phone };
         saveCurrentUser();
+        updateLoginState();
         showNotification(`Welcome back, ${identifier}!`);
         closeLogin();
     } else {

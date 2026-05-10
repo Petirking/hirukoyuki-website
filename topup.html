@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topup Services - Hiruko Yuki Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Topup page specific styles */
+        body {
+            background: #ffffff !important;
+            color: #004e89;
+        }
+
+        .topup-hero {
+            background: linear-gradient(135deg, #0077be 0%, #00a8cc 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .topup-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .topup-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .topup-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .topup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .topup-card {
+            background: white;
+            border: 2px solid rgba(0, 119, 190, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 119, 190, 0.08);
+        }
+
+        .topup-card:hover {
+            border-color: #0077be;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 119, 190, 0.15);
+        }
+
+        .topup-card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0077be, #00a8cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .topup-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #004e89;
+        }
+
+        .topup-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .topup-btn {
+            background: linear-gradient(135deg, #0077be, #00a8cc);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .topup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 119, 190, 0.3);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 119, 190, 0.1);
+            color: #0077be;
+            border: 2px solid #0077be;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #0077be;
+            color: white;
+        }
+
+        .topup-info {
+            background: rgba(0, 119, 190, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .topup-info h2 {
+            color: #004e89;
+            margin-bottom: 20px;
+        }
+
+        .topup-info p {
+            color: #666;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .topup-hero h1 {
+                font-size: 2rem;
+            }
+
+            .topup-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .topup-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Main Page Button -->
+    <a href="index.html" class="back-btn">← Back to Store</a>
+
+    <!-- Hero Section -->
+    <section class="topup-hero">
+        <div class="container">
+            <h1>Topup Services</h1>
+            <p>Instant topup for all Malaysian networks</p>
+        </div>
+    </section>
+
+    <!-- Topup Options -->
+    <div class="topup-container">
+        <div class="topup-grid">
+            <!-- Maxis -->
+            <div class="topup-card">
+                <div class="topup-card-icon">📱</div>
+                <h3>Maxis</h3>
+                <p>Topup Maxis prepaid plans instantly. Available in various denominations from RM5 to RM100.</p>
+                <button class="topup-btn" onclick="selectProvider('Maxis')">Select Maxis</button>
+            </div>
+
+            <!-- Celcom -->
+            <div class="topup-card">
+                <div class="topup-card-icon">📞</div>
+                <h3>Celcom</h3>
+                <p>Topup Celcom prepaid plans instantly. Available in various denominations from RM5 to RM100.</p>
+                <button class="topup-btn" onclick="selectProvider('Celcom')">Select Celcom</button>
+            </div>
+
+            <!-- Digi -->
+            <div class="topup-card">
+                <div class="topup-card-icon">📶</div>
+                <h3>Digi</h3>
+                <p>Topup Digi prepaid plans instantly. Available in various denominations from RM5 to RM100.</p>
+                <button class="topup-btn" onclick="selectProvider('Digi')">Select Digi</button>
+            </div>
+
+            <!-- Umobile -->
+            <div class="topup-card">
+                <div class="topup-card-icon">🌐</div>
+                <h3>Umobile</h3>
+                <p>Topup Umobile prepaid plans instantly. Available in various denominations from RM5 to RM100.</p>
+                <button class="topup-btn" onclick="selectProvider('Umobile')">Select Umobile</button>
+            </div>
+
+            <!-- XOX -->
+            <div class="topup-card">
+                <div class="topup-card-icon">💫</div>
+                <h3>XOX</h3>
+                <p>Topup XOX prepaid plans instantly. Available in various denominations from RM5 to RM100.</p>
+                <button class="topup-btn" onclick="selectProvider('XOX')">Select XOX</button>
+            </div>
+
+            <!-- Other Networks -->
+            <div class="topup-card">
+                <div class="topup-card-icon">📋</div>
+                <h3>Other Networks</h3>
+                <p>Topup for other Malaysian networks. Contact us for custom topup options.</p>
+                <button class="topup-btn" onclick="contactSupport()">Contact Support</button>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="topup-info">
+            <h2>How It Works</h2>
+            <p>
+                Choose your network provider above, then select your desired topup amount.
+                All topups are processed instantly and you'll receive confirmation via SMS.
+                If service is unavailable, full refund will be processed automatically.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function selectProvider(provider) {
+            // Redirect back to main page with selected provider
+            window.location.href = `index.html?provider=${encodeURIComponent(provider)}#topup`;
+        }
+
+        function contactSupport() {
+            // Open WhatsApp for custom topup requests
+            window.open('https://wa.me/60112050840?text=Hi, I need custom topup for other network', '_blank');
+        }
+
+        // Check if coming from main page with provider selection
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedProvider = urlParams.get('provider');
+        if (selectedProvider) {
+            // Could add logic to highlight selected provider
+            console.log('Selected provider:', selectedProvider);
+        }
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\SRM\Desktop\HirukoBlueSky\topup.html
