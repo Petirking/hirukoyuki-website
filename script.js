@@ -412,6 +412,12 @@ const quickAddProductName = document.getElementById('quickAddProductName');
 const quickAddPrice = document.getElementById('quickAddPrice');
 const quickAddTotal = document.getElementById('quickAddTotal');
 
+// Premium Apps Modal functionality
+const premiumAppsModal = document.querySelector('.premium-apps-modal');
+const premiumAppsOverlay = document.querySelector('.premium-apps-overlay');
+const premiumAppsClose = document.querySelector('.premium-apps-close');
+const premiumAppsCancel = document.querySelector('.premium-apps-cancel');
+
 // Topup Modal functionality
 const topupModal = document.querySelector('.topup-modal');
 const topupOverlay = document.querySelector('.topup-overlay');
@@ -463,6 +469,17 @@ function updateQuickAddTotal() {
     const qty = parseInt(quickAddQtyInput.value) || 1;
     const total = currentQuickAddProduct.price * qty;
     quickAddTotal.textContent = formatCurrency(total);
+}
+
+// Premium Apps Modal Functions
+function openPremiumAppsModal() {
+    premiumAppsModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePremiumAppsModal() {
+    premiumAppsModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
 }
 
 // Topup Modal Functions
@@ -688,6 +705,8 @@ document.querySelectorAll('.quick-add-btn').forEach(btn => {
             openBundleprintModal();
         } else if (name === 'Preset Editing') {
             openPreseteditingModal();
+        } else if (name === 'Premium Apps') {
+            openPremiumAppsModal();
         } else {
             openQuickAddModal(name, price);
         }
@@ -727,6 +746,21 @@ quickAddToCartBtn.addEventListener('click', function() {
     const qty = parseInt(quickAddQtyInput.value) || 1;
     addItemToCart(currentQuickAddProduct.name, currentQuickAddProduct.price, qty);
     closeQuickAddModal();
+});
+
+// Premium apps modal controls
+premiumAppsClose.addEventListener('click', closePremiumAppsModal);
+premiumAppsCancel.addEventListener('click', closePremiumAppsModal);
+premiumAppsOverlay.addEventListener('click', closePremiumAppsModal);
+
+// Premium apps add buttons
+document.querySelectorAll('.app-add-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const appName = this.dataset.app;
+        const price = parseFloat(this.dataset.price);
+        addItemToCart(appName, price, 1);
+        showNotification(`${appName} added to cart!`);
+    });
 });
 
 // Login functionality

@@ -1,11 +1,11 @@
 /**
- * Premium Apps Marketplace System
- * Sistem jual aplikasi premium (Netflix, Spotify, YouTube Premium, dll)
- * Harga mulai RM2, stok dari berbagai supplier/provider
+ * Premium Apps Marketplace System - SIMPLIFIED
+ * Jual apps premium: Netflix, YouTube, Spotify, CapCut, Canva, ChatGPT
+ * 1 harga per app, stok dari supplier
  */
 
 const PremiumAppsMarketplace = {
-    version: '1.0.0',
+    version: '1.1.0',
     lastModified: new Date().toISOString(),
     currency: 'MYR',
     
@@ -48,7 +48,7 @@ const PremiumAppsMarketplace = {
         }
     },
     
-    // Premium Applications
+    // Premium Applications (SIMPLIFIED - 6 main apps)
     apps: {
         netflix_1month: {
             id: 'netflix_1month',
@@ -58,7 +58,7 @@ const PremiumAppsMarketplace = {
             region: 'Global',
             icon: 'netflix',
             color: '#E50914',
-            description: 'Access to Netflix premium streaming',
+            description: 'Netflix premium streaming - Ultra HD, offline download, 4 devices',
             features: [
                 'Unlimited streaming',
                 'Ultra HD (4K)',
@@ -66,44 +66,14 @@ const PremiumAppsMarketplace = {
                 'Watch on 4 devices',
                 'No ads'
             ],
-            pricing: {
-                standard: { price: 25.99, originalPrice: 32.99, supplier: 'supplier_official', stock: 450 },
-                budget: { price: 24.99, originalPrice: 32.99, supplier: 'supplier_reseller_a', stock: 320 },
-                cheapest: { price: 22.99, originalPrice: 32.99, supplier: 'supplier_reseller_b', stock: 180 }
-            },
+            price: 24.99,
+            supplier: 'supplier_official',
+            stock: 450,
             deliveryType: 'instant_code',
             deliveryTime: 'Within 5 minutes',
             popularity: 9.5,
             reviews: 4820,
             rating: 4.8,
-            active: true
-        },
-        
-        netflix_3months: {
-            id: 'netflix_3months',
-            appName: 'Netflix',
-            category: 'streaming',
-            plan: '3 Months Premium',
-            region: 'Global',
-            icon: 'netflix',
-            color: '#E50914',
-            description: 'Access to Netflix premium streaming for 3 months',
-            features: [
-                'Unlimited streaming',
-                'Ultra HD (4K)',
-                'Download to watch offline',
-                'Watch on 4 devices',
-                'No ads'
-            ],
-            pricing: {
-                standard: { price: 70.99, originalPrice: 98.97, supplier: 'supplier_official', stock: 300 },
-                budget: { price: 68.99, originalPrice: 98.97, supplier: 'supplier_reseller_a', stock: 200 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 5 minutes',
-            popularity: 8.8,
-            reviews: 2340,
-            rating: 4.7,
             active: true
         },
         
@@ -145,6 +115,34 @@ const PremiumAppsMarketplace = {
             icon: 'spotify',
             color: '#1DB954',
             description: 'Spotify Premium - unlimited music streaming',
+            features: [- Ad-free watching, offline playback, background play',
+            features: [
+                'Ad-free watching',
+                'Offline playback',
+                'Background play',
+                'YouTube Original content',
+                'Music uploads'
+            ],
+            price: 13.99,
+            supplier: 'supplier_official',
+            stock: 680,
+            deliveryType: 'instant_code',
+            deliveryTime: 'Within 5 minutes',
+            popularity: 9.2,
+            reviews: 5670,
+            rating: 4.9,
+            active: true
+        },
+        
+        spotify_premium_1month: {
+            id: 'spotify_premium_1month',
+            appName: 'Spotify Premium',
+            category: 'music',
+            plan: '1 Month',
+            region: 'Global',
+            icon: 'spotify',
+            color: '#1DB954',
+            description: 'Spotify Premium - Ad-free music, offline listening, unlimited skips',
             features: [
                 'Ad-free music',
                 'Offline listening',
@@ -152,74 +150,14 @@ const PremiumAppsMarketplace = {
                 'High quality audio',
                 'Listen with friends'
             ],
-            pricing: {
-                standard: { price: 12.99, originalPrice: 15.99, supplier: 'supplier_official', stock: 750 },
-                budget: { price: 11.99, originalPrice: 15.99, supplier: 'supplier_reseller_a', stock: 600 },
-                cheapest: { price: 10.99, originalPrice: 15.99, supplier: 'supplier_reseller_b', stock: 400 }
-            },
+            price: 11.99,
+            supplier: 'supplier_official',
+            stock: 750,
             deliveryType: 'instant_code',
             deliveryTime: 'Within 5 minutes',
             popularity: 9.4,
             reviews: 7890,
             rating: 4.9,
-            active: true
-        },
-        
-        spotify_family_1month: {
-            id: 'spotify_family_1month',
-            appName: 'Spotify Family',
-            category: 'music',
-            plan: '1 Month (6 Accounts)',
-            region: 'Global',
-            icon: 'spotify',
-            color: '#1DB954',
-            description: 'Spotify Premium for up to 6 family members',
-            features: [
-                'Up to 6 Premium accounts',
-                'Ad-free listening',
-                'Offline downloads',
-                'Family Mix playlist',
-                'Parental controls'
-            ],
-            pricing: {
-                standard: { price: 28.99, originalPrice: 35.99, supplier: 'supplier_official', stock: 320 },
-                budget: { price: 26.99, originalPrice: 35.99, supplier: 'supplier_local', stock: 250 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 5 minutes',
-            popularity: 8.9,
-            reviews: 3210,
-            rating: 4.8,
-            active: true
-        },
-        
-        canva_pro_1month: {
-            id: 'canva_pro_1month',
-            appName: 'Canva Pro',
-            category: 'design',
-            plan: '1 Month',
-            region: 'Global',
-            icon: 'canva',
-            color: '#00D9FF',
-            description: 'Canva Pro - unlimited design templates',
-            features: [
-                'Unlimited templates',
-                'Premium elements',
-                'Unlimited uploads',
-                'Brand kit',
-                'Magic resize',
-                'Background remover'
-            ],
-            pricing: {
-                standard: { price: 9.99, originalPrice: 14.99, supplier: 'supplier_official', stock: 890 },
-                budget: { price: 8.99, originalPrice: 14.99, supplier: 'supplier_reseller_a', stock: 670 },
-                cheapest: { price: 7.99, originalPrice: 14.99, supplier: 'supplier_reseller_b', stock: 450 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 5 minutes',
-            popularity: 8.6,
-            reviews: 4320,
-            rating: 4.7,
             active: true
         },
         
@@ -231,7 +169,7 @@ const PremiumAppsMarketplace = {
             region: 'Global',
             icon: 'capcut',
             color: '#000000',
-            description: 'CapCut Premium - professional video editing',
+            description: 'CapCut Premium - Remove watermark, premium effects, unlimited exports',
             features: [
                 'Remove watermark',
                 'Unlimited exports',
@@ -240,11 +178,9 @@ const PremiumAppsMarketplace = {
                 'Advanced filters',
                 'Cloud storage'
             ],
-            pricing: {
-                standard: { price: 4.99, originalPrice: 6.99, supplier: 'supplier_official', stock: 1200 },
-                budget: { price: 3.99, originalPrice: 6.99, supplier: 'supplier_local', stock: 950 },
-                cheapest: { price: 2.99, originalPrice: 6.99, supplier: 'supplier_reseller_b', stock: 780 }
-            },
+            price: 3.99,
+            supplier: 'supplier_official',
+            stock: 1200,
             deliveryType: 'instant_code',
             deliveryTime: 'Within 5 minutes',
             popularity: 8.4,
@@ -253,179 +189,58 @@ const PremiumAppsMarketplace = {
             active: true
         },
         
-        telegram_premium: {
-            id: 'telegram_premium',
-            appName: 'Telegram Premium',
-            category: 'messaging',
-            plan: '1 Year',
-            region: 'Global',
-            icon: 'telegram',
-            color: '#0088cc',
-            description: 'Telegram Premium - exclusive features',
-            features: [
-                'Premium stickers & emoji',
-                'Advanced search',
-                'Larger files upload',
-                'Bio links',
-                'Folder tags',
-                'Message effects'
-            ],
-            pricing: {
-                standard: { price: 8.99, originalPrice: 11.99, supplier: 'supplier_official', stock: 2100 },
-                budget: { price: 7.99, originalPrice: 11.99, supplier: 'supplier_local', stock: 1800 },
-                cheapest: { price: 6.99, originalPrice: 11.99, supplier: 'supplier_reseller_b', stock: 1200 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 5 minutes',
-            popularity: 7.8,
-            reviews: 2890,
-            rating: 4.5,
-            active: true
-        },
-        
-        adobe_creative_cloud_1month: {
-            id: 'adobe_creative_cloud_1month',
-            appName: 'Adobe Creative Cloud',
+        canva_pro_1month: {
+            id: 'canva_pro_1month',
+            appName: 'Canva Pro',
             category: 'design',
-            plan: '1 Month (All Apps)',
-            region: 'Global',
-            icon: 'adobe',
-            color: '#FF0000',
-            description: 'Adobe Creative Cloud - access all apps',
-            features: [
-                'All Adobe apps',
-                'Cloud storage 100GB',
-                'Desktop & mobile',
-                'Fonts library',
-                'Templates & assets',
-                'Premium support'
-            ],
-            pricing: {
-                standard: { price: 29.99, originalPrice: 39.99, supplier: 'supplier_official', stock: 280 },
-                budget: { price: 27.99, originalPrice: 39.99, supplier: 'supplier_reseller_a', stock: 190 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 10 minutes',
-            popularity: 8.7,
-            reviews: 2120,
-            rating: 4.8,
-            active: true
-        },
-        
-        microsoft_365_1month: {
-            id: 'microsoft_365_1month',
-            appName: 'Microsoft 365',
-            category: 'productivity',
-            plan: '1 Month (Personal)',
-            region: 'Global',
-            icon: 'microsoft',
-            color: '#00A4EF',
-            description: 'Microsoft 365 - Office apps and cloud storage',
-            features: [
-                'Word, Excel, PowerPoint',
-                'Outlook',
-                'OneDrive 1TB',
-                'Microsoft Editor',
-                'Family sharing',
-                'Premium support'
-            ],
-            pricing: {
-                standard: { price: 11.99, originalPrice: 14.99, supplier: 'supplier_official', stock: 520 },
-                budget: { price: 10.99, originalPrice: 14.99, supplier: 'supplier_local', stock: 380 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 10 minutes',
-            popularity: 7.9,
-            reviews: 1890,
-            rating: 4.6,
-            active: true
-        },
-        
-        grammarly_premium_1month: {
-            id: 'grammarly_premium_1month',
-            appName: 'Grammarly Premium',
-            category: 'productivity',
             plan: '1 Month',
             region: 'Global',
-            icon: 'grammarly',
-            color: '#15C784',
-            description: 'Grammarly Premium - advanced writing assistant',
+            icon: 'canva',
+            color: '#00D9FF',
+            description: 'Canva Pro - Unlimited templates, premium elements, background remover',
             features: [
-                'Advanced grammar',
-                'Plagiarism detection',
-                'Tone detection',
-                'Desktop app',
-                'Browser extension',
-                'Goal tracking'
+                'Unlimited templates',
+                'Premium elements',
+                'Unlimited uploads',
+                'Brand kit',
+                'Magic resize',
+                'Background remover'
             ],
-            pricing: {
-                standard: { price: 7.99, originalPrice: 11.99, supplier: 'supplier_official', stock: 640 },
-                budget: { price: 6.99, originalPrice: 11.99, supplier: 'supplier_reseller_a', stock: 480 },
-                cheapest: { price: 5.99, originalPrice: 11.99, supplier: 'supplier_reseller_b', stock: 320 }
-            },
+            price: 8.99,
+            supplier: 'supplier_official',
+            stock: 890,
             deliveryType: 'instant_code',
             deliveryTime: 'Within 5 minutes',
-            popularity: 7.5,
-            reviews: 1650,
-            rating: 4.4,
-            active: true
-        },
-        
-        nordvpn_1month: {
-            id: 'nordvpn_1month',
-            appName: 'NordVPN',
-            category: 'vpn',
-            plan: '1 Month',
-            region: 'Global',
-            icon: 'nordvpn',
-            color: '#418FFF',
-            description: 'NordVPN - secure and private internet',
-            features: [
-                'Encryption',
-                '5900+ servers',
-                '6 simultaneous connections',
-                'No logs policy',
-                'Kill switch',
-                'Double VPN'
-            ],
-            pricing: {
-                standard: { price: 5.99, originalPrice: 10.99, supplier: 'supplier_official', stock: 760 },
-                budget: { price: 4.99, originalPrice: 10.99, supplier: 'supplier_local', stock: 580 }
-            },
-            deliveryType: 'instant_code',
-            deliveryTime: 'Within 5 minutes',
-            popularity: 8.2,
-            reviews: 2340,
+            popularity: 8.6,
+            reviews: 4320,
             rating: 4.7,
             active: true
-        }
-    },
-    
-    // Categories
-    categories: {
-        streaming: {
-            id: 'streaming',
-            name: 'Streaming & Entertainment',
-            icon: 'film',
-            color: '#E50914',
-            description: 'Movies, TV Shows, Music'
         },
-        music: {
-            id: 'music',
-            name: 'Music',
-            icon: 'music',
-            color: '#1DB954',
-            description: 'Music streaming services'
-        },
-        design: {
-            id: 'design',
-            name: 'Design & Graphics',
-            icon: 'palette',
-            color: '#00D9FF',
-            description: 'Design and creativity tools'
-        },
-        video_editing: {
-            id: 'video_editing',
+        
+        chatgpt_plus_1month: {
+            id: 'chatgpt_plus_1month',
+            appName: 'ChatGPT Plus',
+            category: 'ai',
+            plan: '1 Month',
+            region: 'Global',
+            icon: 'chatgpt',
+            color: '#00A67E',
+            description: 'ChatGPT Plus - Faster responses, priority access, GPT-4 usage',
+            features: [
+                'GPT-4 access',
+                'Faster responses',
+                'Priority access',
+                'Higher usage limits',
+                'Early feature access',
+                'Mobile app support'
+            ],
+            price: 14.99,
+            supplier: 'supplier_official',
+            stock: 560,
+            deliveryType: 'instant_code',
+            deliveryTime: 'Within 5 minutes',
+            popularity: 8.8,
+            reviews: 245diting',
             name: 'Video Editing',
             icon: 'video',
             color: '#000000',
