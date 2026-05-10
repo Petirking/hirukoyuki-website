@@ -727,18 +727,28 @@ document.querySelectorAll('.quick-add-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const name = this.dataset.name;
         const price = parseFloat(this.dataset.price);
-        
+
         if (name === 'Topup Semua Server') {
             openTopupModal();
-        } else if (name === 'Bundle Print') {
-            openBundleprintModal();
-        } else if (name === 'Preset Editing') {
-            openPreseteditingModal();
-        } else if (name === 'Premium Apps') {
-            openPremiumAppsModal();
-        } else {
-            openQuickAddModal(name, price);
+            return;
         }
+
+        if (name === 'Bundle Print') {
+            openBundleprintModal();
+            return;
+        }
+
+        if (name === 'Preset Editing') {
+            openPreseteditingModal();
+            return;
+        }
+
+        if (name === 'Premium Apps') {
+            openPremiumAppsModal();
+            return;
+        }
+
+        addItemToCart(name, price, 1);
     });
 });
 

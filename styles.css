@@ -215,8 +215,16 @@ body {
 .list-title {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #004e89;
+}
+
+.quick-add-note {
+    font-size: 14px;
+    color: #2d5c79;
+    margin-bottom: 18px;
+    max-width: 620px;
+    line-height: 1.5;
 }
 
 .list-group {
@@ -947,9 +955,15 @@ body {
     background: white;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 119, 190, 0.25);
-    max-width: 480px;
+    max-width: 520px;
     width: 90%;
     max-height: 90vh;
+    overflow-y: auto;
+}
+
+.topup-body {
+    padding: 40px 32px 32px;
+    background: linear-gradient(135deg, #f8fdff 0%, #ffffff 100%);
     overflow-y: auto;
 }
 
@@ -972,16 +986,11 @@ body {
     transform: scale(1.1);
 }
 
-.topup-body {
-    padding: 40px 30px 30px;
-    background: linear-gradient(135deg, #f8fdff 0%, #ffffff 100%);
-}
-
 .topup-title {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: 700;
     color: #004e89;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     letter-spacing: -0.3px;
 }
 
@@ -992,11 +1001,20 @@ body {
     opacity: 0.8;
 }
 
+.topup-intro {
+    font-size: 15px;
+    color: #5e6f8b;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 119, 190, 0.12);
+}
+
 .topup-providers {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
 }
 
 .provider-card {

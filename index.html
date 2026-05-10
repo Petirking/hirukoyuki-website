@@ -38,35 +38,31 @@
             <h2 class="section-title">Featured Products</h2>
 
             <div class="product-list">
-                <h3 class="list-title">Quick Add</h3>
+                <h3 class="list-title">Quick Add — Manual Receipt</h3>
                 <div class="list-group">
                     <button type="button" class="product-line quick-add-btn" data-name="Topup Semua Server" data-price="25">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Topup Semua Server</span>
                         </div>
-                        <span class="list-price">From RM5</span>
                     </button>
                     <button type="button" class="product-line quick-add-btn" data-name="Bundle Print" data-price="10">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Bundle Print</span>
                         </div>
-                        <span class="list-price">From RM10</span>
                     </button>
                     <button type="button" class="product-line quick-add-btn" data-name="Preset Editing" data-price="1">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Preset Editing</span>
                         </div>
-                        <span class="list-price">From RM1</span>
                     </button>
                     <button type="button" class="product-line quick-add-btn" data-name="Premium Apps" data-price="2">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Premium Apps</span>
                         </div>
-                        <span class="list-price">From RM2</span>
                     </button>
                 </div>
             </div>
@@ -78,7 +74,7 @@
                         <h3>Topup Semua Server</h3>
                         <p class="price">From RM5</p>
                         <p class="description">Topup Maxis, Celcom, XOX, Umobile, Digi dan lain-lain. Refund jika perkhidmatan tidak tersedia.</p>
-                        <button type="button" class="btn btn-outline" data-name="Topup Semua Server" data-price="25" onclick="window.location.href='topup.html'">Select Top Up</button>
+                        <button type="button" class="btn btn-outline" onclick="openTopupModal()">Select Top Up</button>
                     </div>
                 </div>
 
@@ -88,7 +84,7 @@
                         <h3>Bundle Print</h3>
                         <p class="price">From RM10</p>
                         <p class="description">Percetakan dokumen, nota, sticker, flyer dan poster. Proses pantas, berkualiti dan harga berpatutan.</p>
-                        <button type="button" class="btn btn-outline" data-name="Bundle Print" data-price="10">Explore Packages</button>
+                        <button type="button" class="btn btn-outline" onclick="openBundleprintModal()">Explore Packages</button>
                     </div>
                 </div>
 
@@ -98,7 +94,7 @@
                         <h3>Preset Editing</h3>
                         <p class="price">From RM1</p>
                         <p class="description">Servis edit foto/video ikut preset pilihan anda. Tiada watermark dan hasil lebih kemas.</p>
-                        <button type="button" class="btn btn-outline" data-name="Preset Editing" data-price="1">Explore Styles</button>
+                        <button type="button" class="btn btn-outline" onclick="openPreseteditingModal()">Explore Styles</button>
                     </div>
                 </div>
 
@@ -107,8 +103,8 @@
                     <div class="product-info">
                         <h3>Premium Apps</h3>
                         <p class="price">From RM2</p>
-                        <p class="description">Netflix, YouTube Premium, Spotify, CapCut, Canva dan lain-lain. Stok bergantung pada pembekal.</p>
-                        <button type="button" class="btn btn-outline" data-name="Premium Apps" data-price="2">View Options</button>
+                        <p class="description">Netflix, YouTube Premium, Spotify, CapCut, Canva dan lain-lain. Stok bergantung kepada pembekal.</p>
+                        <button type="button" class="btn btn-outline" onclick="openPremiumAppsModal()">View Options</button>
                     </div>
                 </div>
             </div>
@@ -289,8 +285,8 @@
             <button type="button" class="topup-close" aria-label="Close topup modal">×</button>
             
             <div class="topup-body">
-                <h2 class="topup-title">Select Mobile Provider</h2>
-                <p class="topup-subtitle">Choose the service provider you want to topup</p>
+                <h2 class="topup-title">Topup Semua Server</h2>
+                <p class="topup-subtitle">Trusted prepaid top-up services with reliable processing and smooth digital transactions.</p>
                 
                 <div class="topup-providers">
                     <button type="button" class="provider-card" data-provider="Maxis">
