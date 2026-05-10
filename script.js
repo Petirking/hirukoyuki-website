@@ -53,13 +53,11 @@ function formatCurrency(value) {
 }
 
 function calculateFees(subtotal) {
-    const stripeFee = 1 + (subtotal * 0.03); // RM1 + 3%
-    const serviceCharge = subtotal * 0.06; // 6%
+    const stripeFee = 1 + (subtotal * 0.03); // RM1 + 3% - ONLY for Stripe
     return {
         subtotal: subtotal,
         stripeFee: stripeFee,
-        serviceCharge: serviceCharge,
-        total: subtotal + stripeFee + serviceCharge
+        total: subtotal + stripeFee
     };
 }
 
@@ -71,7 +69,7 @@ function renderCartItems() {
         emptyMessage.className = 'cart-empty';
         emptyMessage.textContent = 'Your cart is empty.';
         cartItemsContainer.appendChild(emptyMessage);
-        cartTotalEl.innerHTML = `<div class="cart-summary"><div class="summary-row"><span>Total:</span><span>${formatCurrency(0)}</span></div></div>`;
+        cartTotalEl.innerHTML = `<div class="summary-row"><span class="summary-label">Total:</span><span class="summary-value">RM0.00</span></div>`;
         return;
     }
 
@@ -98,45 +96,50 @@ function renderCartItems() {
         cartItemsContainer.appendChild(cartItem);
     });
 
-    // Calculate and display breakdown
+    // Calculate and display breakdown - only show fees for Stripe
     const subtotal = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const fees = calculateFees(subtotal);
-
-    const breakdownHTML = `
-        <div class="cart-summary">
-            <div class="summary-divider"></div>
+    const isStripe = selectedPaymentMethod === 'stripe';
+    
+    let breakdownHTML = ``;
+    
+    if (isStripe) {
+        const fees = calculateFees(subtotal);
+        breakdownHTML = `
             <div class="summary-row">
                 <span class="summary-label">Subtotal</span>
                 <span class="summary-value">${formatCurrency(fees.subtotal)}</span>
             </div>
-            <div class="summary-row summary-fee">
+            <div class="summary-row summary-fee show">
                 <span class="summary-label">Stripe Fee (RM1 + 3%)</span>
                 <span class="summary-value">${formatCurrency(fees.stripeFee)}</span>
             </div>
-            <div class="summary-row summary-fee">
-                <span class="summary-label">Service Charge (6%)</span>
-                <span class="summary-value">${formatCurrency(fees.serviceCharge)}</span>
-            </div>
             <div class="summary-divider"></div>
             <div class="summary-row summary-total">
-                <span class="summary-label">Total Amount</span>
+                <span class="summary-label">Total</span>
                 <span class="summary-value">${formatCurrency(fees.total)}</span>
             </div>
-        </div>
-    `;
+        `;
+    } else {
+        breakdownHTML = `
+            <div class="summary-row summary-total">
+                <span class="summary-label">Total</span>
+                <span class="summary-value">${formatCurrency(subtotal)}</span>
+            </div>
+        `;
+    }
 
     cartTotalEl.innerHTML = breakdownHTML;
 }
 
-function addItemToCart(name, price) {
+function addItemToCart(name, price, quantity = 1) {
     const existingItem = cartState.items.find(item => item.name === name);
     if (existingItem) {
-        existingItem.quantity += 1;
+        existingItem.quantity += quantity;
         if (existingItem.quantity > 999) {
             existingItem.quantity = 999;
         }
     } else {
-        cartState.items.push({ name, price: Number(price), quantity: 1 });
+        cartState.items.push({ name, price: Number(price), quantity: quantity });
     }
     updateCartCount();
     renderCartItems();
@@ -183,7 +186,7 @@ function closeCart() {
 }
 
 function initCart() {
-    document.querySelectorAll('.btn.btn-outline, .product-line').forEach(button => {
+    document.querySelectorAll('.btn.btn-outline:not(.quick-add-btn), .product-line:not(.quick-add-btn)').forEach(button => {
         button.addEventListener('click', function() {
             const name = this.dataset.name;
             const price = this.dataset.price;
@@ -243,6 +246,7 @@ function initCart() {
         option.addEventListener('change', function() {
             selectedPaymentMethod = this.value;
             updatePaymentNote();
+            renderCartItems(); // Update cart display when payment method changes
         });
     });
 
@@ -394,6 +398,250 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 initCart();
+
+// Quick Add Modal functionality
+const quickAddModal = document.querySelector('.quick-add-modal');
+const quickAddOverlay = document.querySelector('.quick-add-overlay');
+const quickAddClose = document.querySelector('.quick-add-close');
+const quickAddCancel = document.querySelector('.quick-add-cancel');
+const quickAddQtyInput = document.getElementById('quickAddQty');
+const quickAddQtyDecrease = document.querySelector('.qty-decrease');
+const quickAddQtyIncrease = document.querySelector('.qty-increase');
+const quickAddToCartBtn = document.getElementById('quickAddToCart');
+const quickAddProductName = document.getElementById('quickAddProductName');
+const quickAddPrice = document.getElementById('quickAddPrice');
+const quickAddTotal = document.getElementById('quickAddTotal');
+
+// Topup Modal functionality
+const topupModal = document.querySelector('.topup-modal');
+const topupOverlay = document.querySelector('.topup-overlay');
+const topupClose = document.querySelector('.topup-close');
+const topupBack = document.querySelector('.topup-back');
+const topupAmountSection = document.getElementById('topupAmountSection');
+const topupProviders = document.querySelectorAll('.provider-card');
+const topupAmounts = document.querySelectorAll('.amount-btn');
+const topupQtyInput = document.getElementById('topupQty');
+const topupQtyDecrease = document.querySelector('.qty-decrease-topup');
+const topupQtyIncrease = document.querySelector('.qty-increase-topup');
+const topupAddToCartBtn = document.getElementById('topupAddToCart');
+const customAmountInput = document.getElementById('customAmount');
+const selectedProvider = document.getElementById('selectedProvider');
+const selectedAmount = document.getElementById('selectedAmount');
+const selectedQty = document.getElementById('selectedQty');
+const topupTotal = document.getElementById('topupTotal');
+
+let currentQuickAddProduct = {
+    name: '',
+    price: 0
+};
+
+let currentTopupSelection = {
+    provider: '',
+    amount: 0,
+    quantity: 1
+};
+
+function openQuickAddModal(name, price) {
+    currentQuickAddProduct.name = name;
+    currentQuickAddProduct.price = price;
+    
+    quickAddProductName.textContent = name;
+    quickAddPrice.textContent = formatCurrency(price);
+    quickAddQtyInput.value = 1;
+    updateQuickAddTotal();
+    
+    quickAddModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeQuickAddModal() {
+    quickAddModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function updateQuickAddTotal() {
+    const qty = parseInt(quickAddQtyInput.value) || 1;
+    const total = currentQuickAddProduct.price * qty;
+    quickAddTotal.textContent = formatCurrency(total);
+}
+
+// Topup Modal Functions
+function openTopupModal() {
+    currentTopupSelection = {
+        provider: '',
+        amount: 0,
+        quantity: 1
+    };
+    
+    topupProviders.forEach(btn => btn.classList.remove('active'));
+    topupAmounts.forEach(btn => btn.classList.remove('active'));
+    customAmountInput.value = '';
+    topupQtyInput.value = 1;
+    topupAmountSection.classList.add('hidden');
+    selectedProvider.textContent = '-';
+    selectedAmount.textContent = '-';
+    selectedQty.textContent = '1';
+    topupTotal.textContent = 'RM0.00';
+    
+    topupModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeTopupModal() {
+    topupModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function updateTopupSummary() {
+    selectedProvider.textContent = currentTopupSelection.provider || '-';
+    selectedAmount.textContent = currentTopupSelection.amount ? formatCurrency(currentTopupSelection.amount) : '-';
+    selectedQty.textContent = currentTopupSelection.quantity;
+    
+    if (currentTopupSelection.provider && currentTopupSelection.amount) {
+        const total = currentTopupSelection.amount * currentTopupSelection.quantity;
+        topupTotal.textContent = formatCurrency(total);
+    } else {
+        topupTotal.textContent = 'RM0.00';
+    }
+}
+
+// Provider selection
+topupProviders.forEach(btn => {
+    btn.addEventListener('click', function() {
+        topupProviders.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentTopupSelection.provider = this.dataset.provider;
+        topupAmountSection.classList.remove('hidden');
+        updateTopupSummary();
+    });
+});
+
+// Amount selection (preset)
+topupAmounts.forEach(btn => {
+    btn.addEventListener('click', function() {
+        topupAmounts.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        customAmountInput.value = '';
+        currentTopupSelection.amount = parseFloat(this.dataset.amount);
+        updateTopupSummary();
+    });
+});
+
+// Custom amount input
+customAmountInput.addEventListener('change', function() {
+    const amount = parseFloat(this.value) || 0;
+    if (amount > 0) {
+        topupAmounts.forEach(b => b.classList.remove('active'));
+        currentTopupSelection.amount = amount;
+        updateTopupSummary();
+    }
+});
+
+// Topup quantity controls
+topupQtyDecrease.addEventListener('click', function() {
+    let qty = parseInt(topupQtyInput.value) || 1;
+    if (qty > 1) {
+        topupQtyInput.value = qty - 1;
+        currentTopupSelection.quantity = qty - 1;
+        updateTopupSummary();
+    }
+});
+
+topupQtyIncrease.addEventListener('click', function() {
+    let qty = parseInt(topupQtyInput.value) || 1;
+    if (qty < 999) {
+        topupQtyInput.value = qty + 1;
+        currentTopupSelection.quantity = qty + 1;
+        updateTopupSummary();
+    }
+});
+
+topupQtyInput.addEventListener('change', function() {
+    let qty = parseInt(this.value) || 1;
+    if (qty < 1) qty = 1;
+    if (qty > 999) qty = 999;
+    this.value = qty;
+    currentTopupSelection.quantity = qty;
+    updateTopupSummary();
+});
+
+// Topup add to cart
+topupAddToCartBtn.addEventListener('click', function() {
+    if (!currentTopupSelection.provider) {
+        showNotification('Please select a provider');
+        return;
+    }
+    if (!currentTopupSelection.amount) {
+        showNotification('Please select an amount');
+        return;
+    }
+    
+    const itemName = `Topup ${currentTopupSelection.provider} - RM${currentTopupSelection.amount.toFixed(0)}`;
+    addItemToCart(itemName, currentTopupSelection.amount, currentTopupSelection.quantity);
+    closeTopupModal();
+});
+
+// Topup modal controls
+topupClose.addEventListener('click', closeTopupModal);
+topupBack.addEventListener('click', function() {
+    topupAmountSection.classList.add('hidden');
+    topupProviders.forEach(btn => btn.classList.remove('active'));
+    topupAmounts.forEach(btn => btn.classList.remove('active'));
+    customAmountInput.value = '';
+    currentTopupSelection.provider = '';
+    currentTopupSelection.amount = 0;
+    updateTopupSummary();
+});
+topupOverlay.addEventListener('click', closeTopupModal);
+
+// Quick add buttons
+document.querySelectorAll('.quick-add-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const name = this.dataset.name;
+        const price = parseFloat(this.dataset.price);
+        
+        if (name === 'Topup Semua Server') {
+            openTopupModal();
+        } else {
+            openQuickAddModal(name, price);
+        }
+    });
+});
+
+// Quick add modal controls
+quickAddClose.addEventListener('click', closeQuickAddModal);
+quickAddCancel.addEventListener('click', closeQuickAddModal);
+quickAddOverlay.addEventListener('click', closeQuickAddModal);
+
+quickAddQtyDecrease.addEventListener('click', function() {
+    let qty = parseInt(quickAddQtyInput.value) || 1;
+    if (qty > 1) {
+        quickAddQtyInput.value = qty - 1;
+        updateQuickAddTotal();
+    }
+});
+
+quickAddQtyIncrease.addEventListener('click', function() {
+    let qty = parseInt(quickAddQtyInput.value) || 1;
+    if (qty < 999) {
+        quickAddQtyInput.value = qty + 1;
+        updateQuickAddTotal();
+    }
+});
+
+quickAddQtyInput.addEventListener('change', function() {
+    let qty = parseInt(this.value) || 1;
+    if (qty < 1) qty = 1;
+    if (qty > 999) qty = 999;
+    this.value = qty;
+    updateQuickAddTotal();
+});
+
+quickAddToCartBtn.addEventListener('click', function() {
+    const qty = parseInt(quickAddQtyInput.value) || 1;
+    addItemToCart(currentQuickAddProduct.name, currentQuickAddProduct.price, qty);
+    closeQuickAddModal();
+});
 
 // Login functionality
 const loginBtn = document.getElementById('loginBtn');

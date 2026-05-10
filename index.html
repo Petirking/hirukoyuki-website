@@ -40,28 +40,28 @@
             <div class="product-list">
                 <h3 class="list-title">Quick Add</h3>
                 <div class="list-group">
-                    <button type="button" class="product-line" data-name="Topup Semua Server" data-price="25">
+                    <button type="button" class="product-line quick-add-btn" data-name="Topup Semua Server" data-price="25">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Topup Semua Server</span>
                         </div>
                         <span class="list-price">From RM5</span>
                     </button>
-                    <button type="button" class="product-line" data-name="Bundle Print" data-price="10">
+                    <button type="button" class="product-line quick-add-btn" data-name="Bundle Print" data-price="10">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Bundle Print</span>
                         </div>
                         <span class="list-price">From RM10</span>
                     </button>
-                    <button type="button" class="product-line" data-name="Preset Editing" data-price="1">
+                    <button type="button" class="product-line quick-add-btn" data-name="Preset Editing" data-price="1">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Preset Editing</span>
                         </div>
                         <span class="list-price">From RM1</span>
                     </button>
-                    <button type="button" class="product-line" data-name="Premium Apps" data-price="2">
+                    <button type="button" class="product-line quick-add-btn" data-name="Premium Apps" data-price="2">
                         <div class="list-label">
                             <span class="list-dot"></span>
                             <span>Premium Apps</span>
@@ -246,13 +246,145 @@
             <p class="payment-note">Select a payment method before checkout.</p>
         </div>
         <div class="cart-summary">
-            <div class="summary-row">
-                <span>Total</span>
-                <strong class="cart-total">RM0.00</strong>
+            <div class="cart-total">
+                <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">RM0.00</span>
+                </div>
             </div>
             <button type="button" class="btn btn-primary checkout-btn">Checkout</button>
         </div>
     </aside>
+
+    <!-- Quick Add Product Modal -->
+    <div class="quick-add-modal hidden">
+        <div class="quick-add-overlay"></div>
+        <div class="quick-add-content">
+            <button type="button" class="quick-add-close" aria-label="Close product modal">×</button>
+            
+            <div class="quick-add-body">
+                <h2 id="quickAddProductName" class="quick-add-title">Product Name</h2>
+                
+                <div class="quick-add-price">
+                    <span>Price: </span>
+                    <span id="quickAddPrice" class="price-value">RM0.00</span>
+                </div>
+
+                <div class="quick-add-quantity">
+                    <label for="quickAddQty">Quantity</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-btn qty-decrease">−</button>
+                        <input type="number" id="quickAddQty" value="1" min="1" max="999">
+                        <button type="button" class="qty-btn qty-increase">+</button>
+                    </div>
+                </div>
+
+                <div class="quick-add-total">
+                    <span>Total: </span>
+                    <span id="quickAddTotal" class="total-value">RM0.00</span>
+                </div>
+
+                <div class="quick-add-actions">
+                    <button type="button" id="quickAddToCart" class="btn btn-primary">Add to Cart</button>
+                    <button type="button" class="quick-add-cancel btn btn-outline">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topup Service Modal -->
+    <div class="topup-modal hidden">
+        <div class="topup-overlay"></div>
+        <div class="topup-content">
+            <button type="button" class="topup-close" aria-label="Close topup modal">×</button>
+            
+            <div class="topup-body">
+                <h2 class="topup-title">Select Mobile Provider</h2>
+                <p class="topup-subtitle">Choose the service provider you want to topup</p>
+                
+                <div class="topup-providers">
+                    <button type="button" class="provider-card" data-provider="Maxis">
+                        <span class="provider-name">Maxis</span>
+                        <span class="provider-icon">📱</span>
+                    </button>
+                    <button type="button" class="provider-card" data-provider="Celcom">
+                        <span class="provider-name">Celcom</span>
+                        <span class="provider-icon">📱</span>
+                    </button>
+                    <button type="button" class="provider-card" data-provider="Digi">
+                        <span class="provider-name">Digi</span>
+                        <span class="provider-icon">📱</span>
+                    </button>
+                    <button type="button" class="provider-card" data-provider="XOX">
+                        <span class="provider-name">XOX</span>
+                        <span class="provider-icon">📱</span>
+                    </button>
+                    <button type="button" class="provider-card" data-provider="Umobile">
+                        <span class="provider-name">Umobile</span>
+                        <span class="provider-icon">📱</span>
+                    </button>
+                    <button type="button" class="provider-card" data-provider="Hotlink">
+                        <span class="provider-name">Hotlink</span>
+                        <span class="provider-icon">📱</span>
+                    </button>
+                </div>
+
+                <div id="topupAmountSection" class="topup-amount-section hidden">
+                    <h3>Select Amount</h3>
+                    <div class="topup-amounts">
+                        <button type="button" class="amount-btn" data-amount="5">RM5</button>
+                        <button type="button" class="amount-btn" data-amount="10">RM10</button>
+                        <button type="button" class="amount-btn" data-amount="15">RM15</button>
+                        <button type="button" class="amount-btn" data-amount="20">RM20</button>
+                        <button type="button" class="amount-btn" data-amount="50">RM50</button>
+                        <button type="button" class="amount-btn" data-amount="100">RM100</button>
+                    </div>
+
+                    <div class="topup-custom-amount">
+                        <label for="customAmount">Or enter custom amount:</label>
+                        <div class="custom-amount-input">
+                            <span>RM</span>
+                            <input type="number" id="customAmount" placeholder="Enter amount" min="1" max="500">
+                        </div>
+                    </div>
+
+                    <div class="topup-qty">
+                        <label for="topupQty">Quantity</label>
+                        <div class="quantity-selector">
+                            <button type="button" class="qty-btn qty-decrease-topup">−</button>
+                            <input type="number" id="topupQty" value="1" min="1" max="999">
+                            <button type="button" class="qty-btn qty-increase-topup">+</button>
+                        </div>
+                    </div>
+
+                    <div class="topup-summary">
+                        <div class="summary-item">
+                            <span>Provider:</span>
+                            <strong id="selectedProvider">-</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Amount:</span>
+                            <strong id="selectedAmount">-</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Quantity:</span>
+                            <strong id="selectedQty">1</strong>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-item summary-total">
+                            <span>Total:</span>
+                            <strong id="topupTotal">RM0.00</strong>
+                        </div>
+                    </div>
+
+                    <div class="topup-actions">
+                        <button type="button" id="topupAddToCart" class="btn btn-primary">Add to Cart</button>
+                        <button type="button" class="topup-back btn btn-outline">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Login Modal -->
     <div class="login-modal hidden">
