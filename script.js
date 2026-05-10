@@ -681,7 +681,7 @@ function closeBundleprintModal() {
 // Bundle Print add to cart
 bundleprintAddToCartBtn.addEventListener('click', function() {
     addItemToCart(currentBundleprintSelection.name, currentBundleprintSelection.price, 1);
-    showNotification('Bundle Print added to cart. Please send your files via WhatsApp: +60 11 2050 0840');
+    showNotification('Bundle Print added to cart. Please send your files via WhatsApp: +60112-050-0840');
     closeBundleprintModal();
 });
 
@@ -722,7 +722,7 @@ function closePreseteditingModal() {
 // Preset Editing add to cart
 preseteditingAddToCartBtn.addEventListener('click', function() {
     addItemToCart(currentPreseteditingSelection.name, currentPreseteditingSelection.price, 1);
-    showNotification('Preset Editing added to cart. Please send your files via WhatsApp: +60 11 2050 0840');
+    showNotification('Preset Editing added to cart. Please send your files via WhatsApp: +60112-050-0840');
     closePreseteditingModal();
 });
 
