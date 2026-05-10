@@ -18,7 +18,20 @@ module.exports = async (req, res) => {
       });
     }
 
-    const line_items = items.map(item => ({
+    // Calculate subtotal from items
+    const subtotal = items.reduce((sum, item) => {
+      return sum + (item.price * item.quantity);
+    }, 0);
+
+    // Calculate fees (in RM)
+    const stripeFeeMYR = 1 + (subtotal * 0.03); // RM1 + 3%
+    const userChargeMYR = subtotal * 0.06; // 6% charge
+    
+    // Convert to cents for Stripe
+    const stripeFeeAmount = Math.round(stripeFeeMYR * 100);
+    const userChargeAmount = Math.round(userChargeMYR * 100);
+
+    let line_items = items.map(item => ({
       price_data: {
         currency: 'myr',
         product_data: {
@@ -28,6 +41,32 @@ module.exports = async (req, res) => {
       },
       quantity: item.quantity,
     }));
+
+    // Add Stripe fee line item
+    line_items.push({
+      price_data: {
+        currency: 'myr',
+        product_data: {
+          name: 'Stripe Processing Fee (RM1 + 3%)',
+          description: 'Payment processor fee',
+        },
+        unit_amount: stripeFeeAmount,
+      },
+      quantity: 1,
+    });
+
+    // Add 6% service charge line item
+    line_items.push({
+      price_data: {
+        currency: 'myr',
+        product_data: {
+          name: 'Service Charge (6%)',
+          description: 'Additional service charge',
+        },
+        unit_amount: userChargeAmount,
+      },
+      quantity: 1,
+    });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

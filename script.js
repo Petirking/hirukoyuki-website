@@ -52,6 +52,17 @@ function formatCurrency(value) {
     return `RM${value.toFixed(2)}`;
 }
 
+function calculateFees(subtotal) {
+    const stripeFee = 1 + (subtotal * 0.03); // RM1 + 3%
+    const serviceCharge = subtotal * 0.06; // 6%
+    return {
+        subtotal: subtotal,
+        stripeFee: stripeFee,
+        serviceCharge: serviceCharge,
+        total: subtotal + stripeFee + serviceCharge
+    };
+}
+
 function renderCartItems() {
     cartItemsContainer.innerHTML = '';
 
@@ -60,10 +71,11 @@ function renderCartItems() {
         emptyMessage.className = 'cart-empty';
         emptyMessage.textContent = 'Your cart is empty.';
         cartItemsContainer.appendChild(emptyMessage);
-        cartTotalEl.textContent = formatCurrency(0);
+        cartTotalEl.innerHTML = `<div class="cart-summary"><div class="summary-row"><span>Total:</span><span>${formatCurrency(0)}</span></div></div>`;
         return;
     }
 
+    // Render cart items
     cartState.items.forEach(item => {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
@@ -86,8 +98,34 @@ function renderCartItems() {
         cartItemsContainer.appendChild(cartItem);
     });
 
-    const totalValue = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    cartTotalEl.textContent = formatCurrency(totalValue);
+    // Calculate and display breakdown
+    const subtotal = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const fees = calculateFees(subtotal);
+
+    const breakdownHTML = `
+        <div class="cart-summary">
+            <div class="summary-divider"></div>
+            <div class="summary-row">
+                <span class="summary-label">Subtotal</span>
+                <span class="summary-value">${formatCurrency(fees.subtotal)}</span>
+            </div>
+            <div class="summary-row summary-fee">
+                <span class="summary-label">Stripe Fee (RM1 + 3%)</span>
+                <span class="summary-value">${formatCurrency(fees.stripeFee)}</span>
+            </div>
+            <div class="summary-row summary-fee">
+                <span class="summary-label">Service Charge (6%)</span>
+                <span class="summary-value">${formatCurrency(fees.serviceCharge)}</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row summary-total">
+                <span class="summary-label">Total Amount</span>
+                <span class="summary-value">${formatCurrency(fees.total)}</span>
+            </div>
+        </div>
+    `;
+
+    cartTotalEl.innerHTML = breakdownHTML;
 }
 
 function addItemToCart(name, price) {
@@ -232,6 +270,12 @@ function initCart() {
                 const data = await response.json();
 
                 if (data.url) {
+                  // Calculate and save total amount for success page
+                  const subtotal = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                  const fees = calculateFees(subtotal);
+                  localStorage.setItem('lastCartTotal', formatCurrency(fees.total));
+                  localStorage.setItem('lastSessionId', 'SID-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+                  
                   showNotification('Redirecting to Stripe...');
                   window.location.href = data.url;
                 } else {

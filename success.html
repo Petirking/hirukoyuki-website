@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Hiruko Yuki Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1>HIRUKO YUKI</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Shop</a></li>
+                <li><a href="/#about">About</a></li>
+                <li><a href="/#contact">Contact</a></li>
+                <li><button type="button" id="loginBtn" class="btn btn-outline">Login</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Success Section -->
+    <section class="success-page">
+        <div class="container">
+            <div class="success-container">
+                <!-- Success Icon -->
+                <div class="success-icon">✓</div>
+
+                <!-- Success Message -->
+                <div class="success-content">
+                    <h1 class="success-title">Payment Successful!</h1>
+                    <p class="success-subtitle">Thank you for your purchase. Your payment has been processed successfully.</p>
+
+                    <!-- Order Details -->
+                    <div class="order-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Transaction ID:</span>
+                            <span class="detail-value" id="transactionId">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Date & Time:</span>
+                            <span class="detail-value" id="transactionTime">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Amount Paid:</span>
+                            <span class="detail-value amount" id="amountPaid">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value status">Completed ✓</span>
+                        </div>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div class="next-steps">
+                        <h3>What's Next?</h3>
+                        <ul>
+                            <li>✓ Your receipt has been sent to your email</li>
+                            <li>✓ Our team will process your order shortly</li>
+                            <li>✓ You'll receive updates via WhatsApp or Email</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="/" class="btn btn-primary">Back to Shop</a>
+                        <a href="https://wa.me/qr/FGUOQG5YGAGUO1" class="btn btn-outline" target="_blank">Contact Support</a>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="contact-info">
+                        <p>Need help? Contact us on</p>
+                        <a href="https://wa.me/qr/FGUOQG5YGAGUO1" target="_blank" class="contact-link">WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <p style="font-size: 14px; line-height: 1.6;">Quality service for your digital needs.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/" style="color: #e0f6ff; text-decoration: none; font-size: 14px;">Shop</a></li>
+                        <li><a href="/#about" style="color: #e0f6ff; text-decoration: none; font-size: 14px;">About</a></li>
+                        <li><a href="/#contact" style="color: #e0f6ff; text-decoration: none; font-size: 14px;">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="https://wa.me/qr/FGUOQG5YGAGUO1" style="color: #e0f6ff; text-decoration: none; font-size: 14px;" target="_blank">WhatsApp</a></li>
+                        <li><a href="mailto:support@hirukoyuki.my" style="color: #e0f6ff; text-decoration: none; font-size: 14px;">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 20px; text-align: center; color: #e0f6ff; font-size: 13px;">
+                <p>&copy; 2024 Hiruko Yuki. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Display transaction details
+        function initializeSuccessPage() {
+            // Get session/query parameters if available
+            const params = new URLSearchParams(window.location.search);
+            const sessionId = params.get('session_id') || localStorage.getItem('lastSessionId') || 'SID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            
+            // Format date and time
+            const now = new Date();
+            const dateTime = now.toLocaleString('en-MY', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            // Get last cart total if available
+            const lastTotal = localStorage.getItem('lastCartTotal') || 'RM0.00';
+
+            // Update page elements
+            document.getElementById('transactionId').textContent = sessionId;
+            document.getElementById('transactionTime').textContent = dateTime;
+            document.getElementById('amountPaid').textContent = lastTotal;
+
+            // Clear local storage after displaying
+            localStorage.removeItem('lastCartTotal');
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeSuccessPage);
+    </script>
+</body>
+</html>
