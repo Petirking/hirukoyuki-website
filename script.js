@@ -4,6 +4,34 @@ const cartState = {
     items: [],
 };
 
+const productIds = {
+    'CapCut Pro': 'HY1-4821',
+    'Alight Motion Premium': 'HY1-1947',
+    'Netflix Premium': 'HY1-5872',
+    'Disney+ Hotstar': 'HY1-3409',
+    'YouTube Premium': 'HY1-5518',
+    'YouTube Music': 'HY1-6823',
+    'Spotify Premium': 'HY1-2104',
+    'Canva Pro': 'HY1-7720',
+    'ChatGPT Plus': 'HY1-4331',
+    'Telegram Premium': 'HY1-9058',
+    'Bundle Print': 'HY4-2104',
+    'Preset Editing': 'HY3-5518',
+    'Topup Semua Server': 'HY2-8302'
+};
+
+function getProductId(name) {
+    if (productIds[name]) {
+        return productIds[name];
+    }
+
+    if (name.startsWith('Topup')) {
+        return productIds['Topup Semua Server'];
+    }
+
+    return 'HYX-0000';
+}
+
 let users = JSON.parse(localStorage.getItem('users')) || {};
 
 // Initialize demo accounts for testing
@@ -151,15 +179,19 @@ function renderCartItems() {
     cartTotalEl.innerHTML = breakdownHTML;
 }
 
-function addItemToCart(name, price, quantity = 1) {
+function addItemToCart(name, price, quantity = 1, productId = null) {
+    productId = productId || getProductId(name);
     const existingItem = cartState.items.find(item => item.name === name);
     if (existingItem) {
         existingItem.quantity += quantity;
         if (existingItem.quantity > 999) {
             existingItem.quantity = 999;
         }
+        if (!existingItem.productId) {
+            existingItem.productId = productId;
+        }
     } else {
-        cartState.items.push({ name, price: Number(price), quantity: quantity });
+        cartState.items.push({ name, price: Number(price), quantity: quantity, productId });
     }
     updateCartCount();
     renderCartItems();
@@ -282,54 +314,32 @@ function initCart() {
         }
 
         if (selectedPaymentMethod === 'stripe') {
-            // Calculate total amount for validation
-            const subtotal = cartState.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            const fees = calculateFees(subtotal);
-            const total = fees.total;
-
-            // Minimum RM50 validation for Stripe
-            if (total < 50) {
-                showNotification(`Stripe payment requires a minimum of RM50.00. Current total: ${formatCurrency(total)}`);
-                return;
-            }
-
-            try {
-                const response = await fetch("/api/pay", {
-                  method: "POST",
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ items: cartState.items })
-                });
-
-                const data = await response.json();
-
-                if (data.url) {
-                  // Calculate and save total amount for success page
-                  localStorage.setItem('lastCartTotal', formatCurrency(total));
-                  localStorage.setItem('lastSessionId', 'SID-' + Math.random().toString(36).substr(2, 9).toUpperCase());
-                  
-                  showNotification('Redirecting to Stripe...');
-                  window.location.href = data.url;
-                } else {
-                  showNotification("Stripe payment error: " + (data.error || "Unknown error"));
-                }
-            } catch (error) {
-                showNotification("Stripe payment error: " + error.message);
-            }
+            showNotification('Stripe payment is currently unavailable. Sila pilih kaedah manual.');
             return;
         }
 
         if (selectedPaymentMethod === 'touchngo') {
-            showNotification('Redirecting to Touch \'n Go eWallet...');
-            window.location.href = 'https://payment.tngdigital.com.my/sc/bDLn9A4r5u';
+            showNotification('Touch \"n Go payment is currently unavailable. Sila pilih kaedah manual.');
             return;
         }
 
         if (selectedPaymentMethod === 'manual') {
+            const messageLines = ['Hii Yukiee! 👋', 'Saya nak buat order:', ''];
+            cartState.items.forEach(item => {
+                const productId = item.productId || getProductId(item.name);
+                messageLines.push(`Product: ${item.name}`);
+                messageLines.push(`Price: RM${item.price}`);
+                messageLines.push(`Quantity: ${item.quantity}`);
+                messageLines.push('Payment: Manual Payment');
+                messageLines.push(`Product ID: ${productId}`);
+                messageLines.push('');
+            });
+            messageLines.push('Terima kasih 😊');
+            const message = messageLines.join('\n');
+            const encoded = encodeURIComponent(message);
             showNotification('Opening WhatsApp to connect with our team...');
             setTimeout(() => {
-                window.open('https://wa.me/qr/FGUOQG5YGAGUO1', '_blank');
+                window.open(`https://wa.me/60112050840?text=${encoded}`, '_blank');
             }, 300);
             return;
         }
@@ -343,12 +353,12 @@ function updatePaymentNote() {
     if (!paymentNote) return;
 
     if (selectedPaymentMethod === 'stripe') {
-        paymentNote.textContent = '⚠️ Stripe requires a minimum of RM50.00. You will be redirected to a secure Stripe payment page.';
+        paymentNote.textContent = '⚠️ Stripe is currently unavailable. Sila pilih kaedah manual.';
         return;
     }
 
     if (selectedPaymentMethod === 'touchngo') {
-        paymentNote.textContent = 'Touch \'n Go eWallet selected. Click checkout to proceed to payment.';
+        paymentNote.textContent = '⚠️ Touch \"n Go is currently unavailable. Sila pilih kaedah manual.';
         return;
     }
 
