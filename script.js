@@ -635,6 +635,47 @@ bundleprintClose.forEach(btn => {
 });
 bundleprintOverlay.addEventListener('click', closeBundleprintModal);
 
+// Preset Editing Modal Functions
+const preseteditingModal = document.querySelector('.presetediting-modal');
+const preseteditingOverlay = document.querySelector('.presetediting-overlay');
+const preseteditingClose = document.querySelectorAll('.presetediting-close, .presetediting-close-btn');
+const preseteditingAddToCartBtn = document.getElementById('preseteditingAddToCart');
+
+let currentPreseteditingSelection = {
+    name: 'Preset Editing',
+    price: 1,
+    quantity: 1
+};
+
+function openPreseteditingModal() {
+    currentPreseteditingSelection = {
+        name: 'Preset Editing',
+        price: 1,
+        quantity: 1
+    };
+    
+    preseteditingModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePreseteditingModal() {
+    preseteditingModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Preset Editing add to cart
+preseteditingAddToCartBtn.addEventListener('click', function() {
+    addItemToCart(currentPreseteditingSelection.name, currentPreseteditingSelection.price, 1);
+    showNotification('Preset Editing added to cart. Please send your files via WhatsApp: +60 11 2050 0840');
+    closePreseteditingModal();
+});
+
+// Preset Editing modal controls
+preseteditingClose.forEach(btn => {
+    btn.addEventListener('click', closePreseteditingModal);
+});
+preseteditingOverlay.addEventListener('click', closePreseteditingModal);
+
 // Quick add buttons
 document.querySelectorAll('.quick-add-btn').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -645,6 +686,8 @@ document.querySelectorAll('.quick-add-btn').forEach(btn => {
             openTopupModal();
         } else if (name === 'Bundle Print') {
             openBundleprintModal();
+        } else if (name === 'Preset Editing') {
+            openPreseteditingModal();
         } else {
             openQuickAddModal(name, price);
         }
