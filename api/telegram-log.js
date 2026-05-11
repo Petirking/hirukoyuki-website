@@ -16,51 +16,9 @@ module.exports = async function handler(req, res) {
         }
 
         const payload = req.body || {};
-        const telegramMessage = payload.message || payload.callback_query?.message;
-        const isTelegramStart = telegramMessage?.text?.trim() === '/start';
         const isSessionEnd = payload.type === 'session_end';
         const isStatus = payload.type === 'status';
         const isVisitorOnline = payload.type === 'visitor_online';
-
-        if (isTelegramStart) {
-            const chatId = telegramMessage.chat.id;
-            const time = new Date().toLocaleString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            }).replace(',', '');
-
-            const startReply = `🤖 HIRUKOYUKI BOT STATUS\n\nStatus: Active ✅\nWebsite: Online ✅\nTelegram Log: Connected ✅\n\nDomain: https://hirukoyuki.my\nEnvironment: Production\nTime: ${time}\n\nMessage:\nTelegram logging system is running normally.`;
-
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: startReply,
-                    parse_mode: 'Markdown'
-                })
-            });
-
-            const telegramData = await response.json();
-            if (!telegramData.ok) {
-                console.error('Telegram /start response error:', telegramData);
-                return res.status(500).json({
-                    success: false,
-                    error: telegramData.description || 'Telegram API failed',
-                    telegramData
-                });
-            }
-
-            return res.status(200).json({
-                success: true,
-                messageId: telegramData.result?.message_id,
-                telegramData
-            });
-        }
 
         let logMessage;
         if (isStatus) {
