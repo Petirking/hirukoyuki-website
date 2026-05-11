@@ -9,6 +9,7 @@ router.post('/telegram-log', async (req, res) => {
     try {
         const clientData = req.body;
         const clientIP = req.ip || req.connection.remoteAddress || 'Unknown';
+        const isSessionEnd = clientData.type === 'session_end';
 
         // Get location from IP
         let location = 'Unknown';
@@ -21,8 +22,26 @@ router.post('/telegram-log', async (req, res) => {
             console.log('Geolocation failed:', geoError.message);
         }
 
-        // Format the log message
-        const logMessage = `
+        let logMessage;
+        
+        if (isSessionEnd) {
+            // Format for session end
+            logMessage = `
+📊 User Session Summary
+Entry: ${clientData.entryTime}
+Exit: ${clientData.exitTime}
+Duration: ${clientData.duration}
+Reason: ${clientData.reason}
+Total Clicks: ${clientData.totalClicks}
+Page: ${clientData.pageURL}
+Device: ${clientData.deviceType} (${clientData.browser} on ${clientData.os})
+Screen: ${clientData.screenSize}
+Language: ${clientData.language}
+IP: ${clientIP} (${location})
+            `.trim();
+        } else {
+            // Format for individual activity
+            logMessage = `
 🔔 New Activity Log
 Page: ${clientData.pageURL || 'Unknown'}
 Referrer: ${clientData.referrer || 'Direct'}
@@ -32,7 +51,8 @@ Language: ${clientData.language}
 IP: ${clientIP} (${location})
 Button: "${clientData.buttonText || 'Unknown'}"
 Time: ${clientData.timestamp}
-        `.trim();
+            `.trim();
+        }
 
         // Send to Telegram
         const telegramURL = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;

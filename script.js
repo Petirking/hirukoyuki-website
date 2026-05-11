@@ -949,7 +949,17 @@ if (payButton) {
 }
 
 // Telegram Bot Logging System
+let sessionData = {
+    entryTime: new Date().toISOString(),
+    activityCount: 0,
+    lastActivityTime: Date.now(),
+    idleTimeout: 3600000, // 1 hour
+    idleTimer: null,
+    sessionActive: true
+};
+
 function getDeviceInfo() {
+
     const ua = navigator.userAgent;
     let deviceType = 'Desktop';
     if (/Mobi|Android/i.test(ua)) deviceType = 'Mobile';
@@ -977,7 +987,52 @@ function getDeviceInfo() {
     };
 }
 
+function resetIdleTimer() {
+    if (sessionData.idleTimer) clearTimeout(sessionData.idleTimer);
+    sessionData.lastActivityTime = Date.now();
+    
+    sessionData.idleTimer = setTimeout(() => {
+        if (sessionData.sessionActive) {
+            logSessionEnd('Idle timeout (1 hour)');
+        }
+    }, sessionData.idleTimeout);
+}
+
+function logSessionEnd(reason = 'User left') {
+    if (!sessionData.sessionActive) return;
+    
+    sessionData.sessionActive = false;
+    const entryTime = new Date(sessionData.entryTime);
+    const exitTime = new Date();
+    const durationMs = exitTime - entryTime;
+    const durationMin = Math.floor(durationMs / 60000);
+    const durationSec = Math.floor((durationMs % 60000) / 1000);
+    
+    const deviceInfo = getDeviceInfo();
+    const sessionLog = {
+        entryTime: sessionData.entryTime,
+        exitTime: exitTime.toISOString(),
+        duration: `${durationMin}m ${durationSec}s`,
+        reason: reason,
+        totalClicks: sessionData.activityCount,
+        pageURL: window.location.href,
+        ...deviceInfo
+    };
+    
+    fetch('/api/telegram-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            ...sessionLog,
+            type: 'session_end'
+        })
+    }).catch(err => console.log('Session log failed:', err));
+}
+
 function sendLogToTelegram(buttonText) {
+    sessionData.activityCount++;
+    resetIdleTimer();
+
     const deviceInfo = getDeviceInfo();
     const logData = {
         pageURL: window.location.href,
@@ -996,10 +1051,27 @@ function sendLogToTelegram(buttonText) {
 
 // Attach logging to all buttons
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize session tracking
+    resetIdleTimer();
+    
     document.querySelectorAll('button, .btn, input[type="submit"], a[href*="wa.me"], input[type="radio"], input[type="checkbox"]').forEach(el => {
         el.addEventListener('click', function(e) {
             const buttonText = this.textContent.trim() || this.getAttribute('data-button-title') || this.value || this.name || 'Unknown';
             sendLogToTelegram(buttonText);
         });
     });
+    
+    // Track page changes and scroll
+    document.addEventListener('scroll', () => {
+        resetIdleTimer();
+    });
+    
+    window.addEventListener('focus', () => {
+        resetIdleTimer();
+    });
+});
+
+// Log session end when user leaves
+window.addEventListener('beforeunload', () => {
+    logSessionEnd('User left website');
 });
