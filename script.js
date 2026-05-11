@@ -1025,8 +1025,16 @@ function logSessionEnd(reason = 'User left') {
         body: JSON.stringify({
             ...sessionLog,
             type: 'session_end'
+        }),
+        keepalive: true
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('✓ Session log sent:', reason);
         })
-    }).catch(err => console.log('Session log failed:', err));
+        .catch(err => {
+            console.error('✗ Session log failed:', err.message);
+        });
 }
 
 function sendLogToTelegram(buttonText) {
@@ -1046,7 +1054,26 @@ function sendLogToTelegram(buttonText) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(logData)
-    }).catch(err => console.log('Log send failed:', err)); // Don't block user
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.error(`Log response error: ${response.status}`);
+                return response.text().then(text => {
+                    console.error('Response:', text);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                console.log('✓ Log sent to Telegram:', buttonText);
+            } else if (data && data.error) {
+                console.error('Log error:', data.error);
+            }
+        })
+        .catch(err => {
+            console.error('✗ Log send failed:', err.message);
+        });
 }
 
 // Attach logging to all buttons
