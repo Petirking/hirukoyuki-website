@@ -947,3 +947,59 @@ if (payButton) {
     }
   });
 }
+
+// Telegram Bot Logging System
+function getDeviceInfo() {
+    const ua = navigator.userAgent;
+    let deviceType = 'Desktop';
+    if (/Mobi|Android/i.test(ua)) deviceType = 'Mobile';
+    else if (/Tablet|iPad/i.test(ua)) deviceType = 'Tablet';
+
+    let browser = 'Unknown';
+    if (ua.includes('Chrome')) browser = 'Chrome';
+    else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+    else if (ua.includes('Firefox')) browser = 'Firefox';
+    else if (ua.includes('Edge')) browser = 'Edge';
+
+    let os = 'Unknown';
+    if (ua.includes('Windows')) os = 'Windows';
+    else if (ua.includes('Mac')) os = 'macOS';
+    else if (ua.includes('Linux')) os = 'Linux';
+    else if (ua.includes('Android')) os = 'Android';
+    else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+
+    return {
+        deviceType,
+        browser,
+        os,
+        screenSize: `${screen.width}x${screen.height}`,
+        language: navigator.language || 'Unknown'
+    };
+}
+
+function sendLogToTelegram(buttonText) {
+    const deviceInfo = getDeviceInfo();
+    const logData = {
+        pageURL: window.location.href,
+        referrer: document.referrer || 'Direct',
+        timestamp: new Date().toISOString(),
+        buttonText: buttonText || 'Unknown',
+        ...deviceInfo
+    };
+
+    fetch('/api/telegram-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(logData)
+    }).catch(err => console.log('Log send failed:', err)); // Don't block user
+}
+
+// Attach logging to all buttons
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button, .btn, input[type="submit"], a[href*="wa.me"], input[type="radio"], input[type="checkbox"]').forEach(el => {
+        el.addEventListener('click', function(e) {
+            const buttonText = this.textContent.trim() || this.getAttribute('data-button-title') || this.value || this.name || 'Unknown';
+            sendLogToTelegram(buttonText);
+        });
+    });
+});
