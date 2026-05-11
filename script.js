@@ -4,33 +4,120 @@ const cartState = {
     items: [],
 };
 
+// Product ID Format: HY(CategoryCode)-(PriceCode)-(ServiceCode)-(RandomOrderNumber)
 const productIds = {
-    'CapCut Pro': 'HY1-4821',
-    'Alight Motion Premium': 'HY1-1947',
-    'Netflix Premium': 'HY1-5872',
-    'Disney+ Hotstar': 'HY1-3409',
-    'YouTube Premium': 'HY1-5518',
-    'YouTube Music': 'HY1-6823',
-    'Spotify Premium': 'HY1-2104',
-    'Canva Pro': 'HY1-7720',
-    'ChatGPT Plus': 'HY1-4331',
-    'Telegram Premium': 'HY1-9058',
-    'Bundle Print': 'HY4-2104',
-    'Preset Editing': 'HY3-5518',
-    'Topup Semua Server': 'HY2-8302'
+    // HY1 = Premium Apps
+    'Netflix Premium': 'HY1-014-001-5872',        // RM14, Service 001 (Netflix)
+    'Disney+ Hotstar': 'HY1-014-002-3409',        // RM14, Service 002 (Disney+)
+    'Spotify Premium': 'HY1-014-003-2104',        // RM14, Service 003 (Spotify)
+    'YouTube Premium': 'HY1-017-004-5518',        // RM17, Service 004 (YouTube Premium)
+    'YouTube Music': 'HY1-014-005-6823',          // RM14, Service 005 (YouTube Music)
+    'Telegram Premium': 'HY1-003-006-9058',       // RM3, Service 006 (Telegram Premium)
+    'ChatGPT Plus': 'HY1-025-007-4331',           // RM25, Service 007 (ChatGPT Plus)
+    'Canva Pro': 'HY1-010-008-7720',              // RM10, Service 008 (Canva Pro)
+    'CapCut Pro': 'HY1-010-009-4821',             // RM10, Service 009 (CapCut Pro)
+    'Alight Motion Premium': 'HY1-010-010-1947',  // RM10, Service 010 (Alight Motion)
+    
+    // HY2 = Topup Services (Service codes: 001=Maxis, 002=Celcom, 003=Digi, 004=XOX, 005=Umobile, 006=Hotlink)
+    'Maxis': 'HY2-050-001-0000',    // Price TBD, Service 001 (Maxis) - random number generated per transaction
+    'Celcom': 'HY2-050-002-0000',   // Price TBD, Service 002 (Celcom)
+    'Digi': 'HY2-050-003-0000',     // Price TBD, Service 003 (Digi)
+    'XOX': 'HY2-050-004-0000',      // Price TBD, Service 004 (XOX)
+    'Umobile': 'HY2-050-005-0000',  // Price TBD, Service 005 (Umobile)
+    'Hotlink': 'HY2-050-006-0000',  // Price TBD, Service 006 (Hotlink)
+    'Topup Semua Server': 'HY2-050-001-0000',  // Generic topup (default to Maxis)
+    
+    // HY3 = Preset Editing
+    'Preset Editing': 'HY3-001-001-5518',  // RM1, Service 001
+    
+    // HY4 = Bundle Printing
+    'Bundle Print': 'HY4-010-001-2104'     // RM10, Service 001
 };
 
-function getProductId(name) {
-    if (productIds[name]) {
-        return productIds[name];
-    }
-
-    if (name.startsWith('Topup')) {
-        return productIds['Topup Semua Server'];
-    }
-
-    return 'HYX-0000';
+// Generate random 4-digit order number
+function generateRandomOrderNumber() {
+    return Math.floor(1000 + Math.random() * 9000).toString();
 }
+
+// Generate product ID with dynamic order number and optional price override
+function getProductId(name, priceCode = null) {
+    const baseId = productIds[name];
+    
+    if (!baseId) {
+        if (name.startsWith('Topup')) {
+            return generateTopupProductId(name, priceCode);
+        }
+        return 'HYX-0000-000-' + generateRandomOrderNumber();
+    }
+
+    // Replace the last segment (order number) with a new random number
+    if (baseId.includes('-')) {
+        const parts = baseId.split('-');
+        if (parts.length === 4) {
+            // Replace the last order number with a new random one
+            parts[3] = generateRandomOrderNumber();
+            return parts.join('-');
+        }
+    }
+
+    return baseId;
+}
+
+// Generate topup product IDs with dynamic pricing
+function generateTopupProductId(provider, priceCode = null) {
+    const serviceMap = {
+        'Maxis': '001',
+        'Celcom': '002',
+        'Digi': '003',
+        'XOX': '004',
+        'Umobile': '005',
+        'Hotlink': '006',
+        'Topup Semua Server': '001'
+    };
+
+    const serviceCode = serviceMap[provider] || '001';
+    const price = priceCode || '050'; // Default to RM50 if not specified
+    const orderNumber = generateRandomOrderNumber();
+
+    return `HY2-${price}-${serviceCode}-${orderNumber}`;
+}
+
+// Product ID Reference Guide for Telegram Logs & Order Tracking
+// Format: HY(CategoryCode)-(PriceCode)-(ServiceCode)-(RandomOrderNumber)
+const productIdReference = {
+    categories: {
+        'HY1': 'Premium Apps',
+        'HY2': 'Topup Services',
+        'HY3': 'Preset Editing',
+        'HY4': 'Bundle Printing'
+    },
+    premiumAppServices: {
+        '001': 'Netflix Premium (RM14)',
+        '002': 'Disney+ Hotstar (RM14)',
+        '003': 'Spotify Premium (RM14)',
+        '004': 'YouTube Premium (RM17)',
+        '005': 'YouTube Music (RM14)',
+        '006': 'Telegram Premium (RM3)',
+        '007': 'ChatGPT Plus (RM25)',
+        '008': 'Canva Pro (RM10)',
+        '009': 'CapCut Pro (RM10)',
+        '010': 'Alight Motion Premium (RM10)'
+    },
+    topupServices: {
+        '001': 'Maxis',
+        '002': 'Celcom',
+        '003': 'Digi',
+        '004': 'XOX',
+        '005': 'Umobile',
+        '006': 'Hotlink'
+    },
+    presetEditingServices: {
+        '001': 'Preset Editing (RM1)'
+    },
+    bundlePrintingServices: {
+        '001': 'Bundle Printing (RM10)'
+    }
+};
 
 let users = JSON.parse(localStorage.getItem('users')) || {};
 
@@ -636,7 +723,9 @@ topupAddToCartBtn.addEventListener('click', function() {
     }
     
     const itemName = `Topup ${currentTopupSelection.provider} - RM${currentTopupSelection.amount.toFixed(0)}`;
-    addItemToCart(itemName, currentTopupSelection.amount, currentTopupSelection.quantity);
+    const priceCode = String(Math.round(currentTopupSelection.amount)).padStart(3, '0');
+    const productId = generateTopupProductId(currentTopupSelection.provider, priceCode);
+    addItemToCart(itemName, currentTopupSelection.amount, currentTopupSelection.quantity, productId);
     closeTopupModal();
 });
 
