@@ -17,9 +17,33 @@ module.exports = async function handler(req, res) {
 
         const payload = req.body || {};
         const isSessionEnd = payload.type === 'session_end';
+        const isStatus = payload.type === 'status';
+        const isVisitorOnline = payload.type === 'visitor_online';
 
         let logMessage;
-        if (isSessionEnd) {
+        if (isStatus) {
+            const time = new Date().toLocaleString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(',', '');
+            
+            logMessage = `🤖 HIRUKOYUKI BOT STATUS\n\nStatus: Active ✅\nWebsite: Online ✅\nTelegram Log: Connected ✅\n\nDomain: https://hirukoyuki.my\nEnvironment: Production\nTime: ${time}\n\nMessage:\nTelegram logging system is running normally.`;
+        } else if (isVisitorOnline) {
+            const time = payload.timestamp || new Date().toLocaleString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(',', '');
+            
+            logMessage = `🟢 HIRUKOYUKI VISITOR ONLINE\n\nCurrent Online Visitors: ${payload.onlineVisitors || 0}\n\nDaily Visitors: ${payload.dailyVisitors || 0}\nWeekly Visitors: ${payload.weeklyVisitors || 0}\nMonthly Visitors: ${payload.monthlyVisitors || 0}\nTotal Visitors: ${payload.totalVisitors || 0}\n\nVisitor counting uses device/session detection.\nDuplicate visits from the same device/session will not increase visitor count repeatedly.\n\nInactive or offline visitors will be removed automatically after timeout detection.\n\nPage: ${payload.pageURL || 'Unknown'}\n\nDevice: ${payload.deviceType || 'Unknown'}\nBrowser: ${payload.browser || 'Unknown'}\nOS: ${payload.os || 'Unknown'}\nScreen: ${payload.screenSize || 'Unknown'}\nLanguage: ${payload.language || 'Unknown'}\n\nTime: ${time}`;
+        } else if (isSessionEnd) {
             logMessage = `📊 User Session Summary\n` +
                 `Entry: ${payload.entryTime || 'Unknown'}\n` +
                 `Exit: ${payload.exitTime || 'Unknown'}\n` +
@@ -31,14 +55,16 @@ module.exports = async function handler(req, res) {
                 `Screen: ${payload.screenSize || 'Unknown'}\n` +
                 `Language: ${payload.language || 'Unknown'}`;
         } else {
-            logMessage = `🔔 New Activity Log\n` +
-                `Page: ${payload.pageURL || 'Unknown'}\n` +
-                `Referrer: ${payload.referrer || 'Direct'}\n` +
-                `Device: ${payload.deviceType || 'Unknown'} (${payload.browser || 'Unknown'} on ${payload.os || 'Unknown'})\n` +
-                `Screen: ${payload.screenSize || 'Unknown'}\n` +
-                `Language: ${payload.language || 'Unknown'}\n` +
-                `Button: "${payload.buttonText || 'Unknown'}"\n` +
-                `Time: ${payload.timestamp || new Date().toISOString()}`;
+            const time = payload.timestamp || new Date().toLocaleString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(',', '');
+            
+            logMessage = `🔔 HIRUKOYUKI ACTIVITY LOG\n\nEvent: User Interaction\n\nInteraction Type: ${payload.interactionType || 'Click'}\nButton/Text/Input: ${payload.buttonText || 'Unknown'}\n\nElement Tag: ${payload.elementTag || 'Unknown'}\nElement ID: ${payload.elementId || 'Unknown'}\nElement Class: ${payload.elementClass || 'Unknown'}\n\nInput Value: ${payload.inputValue || 'N/A'}\nSelected Option: ${payload.selectedOption || 'N/A'}\n\nPage: ${payload.pageURL || 'Unknown'}\nReferrer: ${payload.referrer || 'Direct'}\n\nDevice: ${payload.deviceType || 'Unknown'}\nBrowser: ${payload.browser || 'Unknown'}\nOS: ${payload.os || 'Unknown'}\nScreen: ${payload.screenSize || 'Unknown'}\nLanguage: ${payload.language || 'Unknown'}\n\nTime: ${time}`;
         }
 
         const telegramURL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;

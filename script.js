@@ -955,8 +955,79 @@ let sessionData = {
     lastActivityTime: Date.now(),
     idleTimeout: 3600000, // 1 hour
     idleTimer: null,
-    sessionActive: true
+    sessionActive: true,
+    visitorId: null
 };
+
+// Visitor tracking
+let onlineVisitors = 0;
+let dailyVisitors = 0;
+let totalVisitors = 0;
+
+function getVisitorId() {
+    let visitorId = localStorage.getItem('hiruko_visitor_id');
+    if (!visitorId) {
+        visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('hiruko_visitor_id', visitorId);
+        
+        // Increment total visitors
+        totalVisitors = parseInt(localStorage.getItem('hiruko_total_visitors') || '0') + 1;
+        localStorage.setItem('hiruko_total_visitors', totalVisitors);
+        
+        // Check if new daily visitor
+        const today = new Date().toDateString();
+        const lastVisit = localStorage.getItem('hiruko_last_visit');
+        if (lastVisit !== today) {
+            dailyVisitors = parseInt(localStorage.getItem('hiruko_daily_visitors') || '0') + 1;
+            localStorage.setItem('hiruko_daily_visitors', dailyVisitors);
+            localStorage.setItem('hiruko_last_visit', today);
+        }
+    }
+    return visitorId;
+}
+
+function updateOnlineVisitors() {
+    onlineVisitors = parseInt(localStorage.getItem('hiruko_online_visitors') || '0');
+    onlineVisitors = Math.max(0, onlineVisitors); // Ensure not negative
+}
+
+function sendVisitorOnlineStatus() {
+    updateOnlineVisitors();
+    const deviceInfo = getDeviceInfo();
+    const time = new Date().toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    }).replace(',', '');
+    
+    const visitorData = {
+        type: 'visitor_online',
+        onlineVisitors: onlineVisitors,
+        dailyVisitors: dailyVisitors,
+        weeklyVisitors: parseInt(localStorage.getItem('hiruko_weekly_visitors') || '0'),
+        monthlyVisitors: parseInt(localStorage.getItem('hiruko_monthly_visitors') || '0'),
+        totalVisitors: totalVisitors,
+        pageURL: window.location.href,
+        ...deviceInfo,
+        timestamp: time
+    };
+    
+    fetch('/api/telegram-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(visitorData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('✓ Visitor online status sent');
+        })
+        .catch(err => {
+            console.error('✗ Visitor status failed:', err.message);
+        });
+}
 
 function getDeviceInfo() {
 
@@ -1037,17 +1108,40 @@ function logSessionEnd(reason = 'User left') {
         });
 }
 
-function sendLogToTelegram(buttonText) {
+function sendLogToTelegram(buttonText, element = null, interactionType = 'Click') {
     sessionData.activityCount++;
     resetIdleTimer();
 
     const deviceInfo = getDeviceInfo();
+    const now = new Date();
+    const timestamp = now.toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    }).replace(',', '');
+
+    let elementInfo = {};
+    if (element) {
+        elementInfo = {
+            elementTag: element.tagName || 'Unknown',
+            elementId: element.id || 'Unknown',
+            elementClass: element.className || 'Unknown',
+            inputValue: element.value || 'N/A',
+            selectedOption: element.type === 'radio' || element.type === 'checkbox' ? (element.checked ? 'Selected' : 'Unselected') : 'N/A'
+        };
+    }
+
     const logData = {
+        interactionType: interactionType,
+        buttonText: buttonText || 'Unknown',
         pageURL: window.location.href,
         referrer: document.referrer || 'Direct',
-        timestamp: new Date().toISOString(),
-        buttonText: buttonText || 'Unknown',
-        ...deviceInfo
+        timestamp: timestamp,
+        ...deviceInfo,
+        ...elementInfo
     };
 
     fetch('/api/telegram-log', {
@@ -1076,17 +1170,102 @@ function sendLogToTelegram(buttonText) {
         });
 }
 
+function sendBotStatus() {
+    fetch('/api/telegram-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'status' })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('✓ Bot status sent to Telegram');
+        })
+        .catch(err => {
+            console.error('✗ Bot status failed:', err.message);
+        });
+}
+
 // Attach logging to all buttons
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize visitor tracking
+    sessionData.visitorId = getVisitorId();
+    updateOnlineVisitors();
+    
+    // Send bot status on page load
+    sendBotStatus();
+    
+    // Send visitor online status after a short delay
+    setTimeout(() => {
+        sendVisitorOnlineStatus();
+    }, 2000);
+    
     // Initialize session tracking
     resetIdleTimer();
     
-    document.querySelectorAll('button, .btn, input[type="submit"], a[href*="wa.me"], input[type="radio"], input[type="checkbox"]').forEach(el => {
+    // Log all button and input clicks
+    document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], a[href*="wa.me"], input[type="radio"], input[type="checkbox"]').forEach(el => {
         el.addEventListener('click', function(e) {
-            const buttonText = this.textContent.trim() || this.getAttribute('data-button-title') || this.value || this.name || 'Unknown';
-            sendLogToTelegram(buttonText);
+            let buttonText = this.textContent.trim() || this.getAttribute('data-button-title') || this.value || this.name || 'Unknown';
+            
+            // Better text extraction for complex elements
+            if (!buttonText || buttonText === 'Unknown') {
+                buttonText = this.getAttribute('aria-label') || this.getAttribute('title') || this.id || this.className || 'Unknown';
+            }
+            
+            // Special handling for radio buttons (product selection)
+            if (this.type === 'radio') {
+                const label = document.querySelector(`label[for="${this.id}"]`);
+                if (label) {
+                    buttonText = `Selected: ${label.textContent.trim()}`;
+                } else {
+                    buttonText = `Radio: ${this.value || this.name}`;
+                }
+            }
+            
+            sendLogToTelegram(buttonText, this, 'Click');
         });
     });
+    
+    // Log form submissions
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            let formInfo = `Form Submitted: ${this.id || this.className || 'Unknown Form'}`;
+            
+            // Add form data summary (without sensitive info)
+            const entries = Array.from(formData.entries());
+            if (entries.length > 0) {
+                const summary = entries.map(([key, value]) => {
+                    // Mask sensitive data
+                    if (key.toLowerCase().includes('email') || key.toLowerCase().includes('phone')) {
+                        return `${key}: [PROTECTED]`;
+                    }
+                    return `${key}: ${value}`;
+                }).join(', ');
+                formInfo += ` (${summary})`;
+            }
+            
+            sendLogToTelegram(formInfo);
+        });
+    });
+    
+    // Log modal interactions
+    const modalObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === 1 && (node.classList?.contains('modal') || node.id?.includes('modal'))) {
+                    sendLogToTelegram(`Modal Opened: ${node.id || node.className || 'Unknown Modal'}`);
+                }
+            });
+            mutation.removedNodes.forEach((node) => {
+                if (node.nodeType === 1 && (node.classList?.contains('modal') || node.id?.includes('modal'))) {
+                    sendLogToTelegram(`Modal Closed: ${node.id || node.className || 'Unknown Modal'}`);
+                }
+            });
+        });
+    });
+    
+    modalObserver.observe(document.body, { childList: true, subtree: true });
     
     // Track page changes and scroll
     document.addEventListener('scroll', () => {
