@@ -1,10 +1,6 @@
 {
   "buildCommand": "npm install",
   "outputDirectory": ".",
-  "env": {
-    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
-    "TELEGRAM_CHAT_ID": "@telegram_chat_id"
-  },
   "functions": {
     "api/telegram-log.js": {
       "runtime": "nodejs18.x"
