@@ -1253,12 +1253,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === 1 && (node.classList?.contains('modal') || node.id?.includes('modal'))) {
+                if (node.nodeType === 1 && (node.classList?.contains('modal') || node.id?.includes('modal') || node.className?.includes('modal'))) {
+                    console.log('Modal opened detected:', node.className);
                     sendLogToTelegram(`Modal Opened: ${node.id || node.className || 'Unknown Modal'}`);
                 }
             });
             mutation.removedNodes.forEach((node) => {
-                if (node.nodeType === 1 && (node.classList?.contains('modal') || node.id?.includes('modal'))) {
+                if (node.nodeType === 1 && (node.classList?.contains('modal') || node.id?.includes('modal') || node.className?.includes('modal'))) {
+                    console.log('Modal closed detected:', node.className);
                     sendLogToTelegram(`Modal Closed: ${node.id || node.className || 'Unknown Modal'}`);
                 }
             });

@@ -4,6 +4,9 @@
   "functions": {
     "api/telegram-log.js": {
       "runtime": "nodejs18.x"
+    },
+    "api/telegram-webhook.js": {
+      "runtime": "nodejs18.x"
     }
   }
 }
