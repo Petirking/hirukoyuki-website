@@ -1,33 +1,43 @@
-const express = require('express');
-const axios = require('axios');
-require('dotenv').config();
+// Vercel Serverless Function for Telegram Logging
+// Uses environment variables: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
 
-const router = express.Router();
+module.exports = async (req, res) => {
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
 
-// Endpoint to receive logs from frontend and send to Telegram
-router.post('/telegram-log', async (req, res) => {
     try {
         const clientData = req.body;
-        const clientIP = req.ip || req.connection.remoteAddress || 'Unknown';
+        const clientIP = req.headers['x-forwarded-for']?.split(',')[0] || req.connection.remoteAddress || 'Unknown';
         const isSessionEnd = clientData.type === 'session_end';
+
+        // Get environment variables
+        const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+        const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+        if (!BOT_TOKEN || !CHAT_ID) {
+            console.error('Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID');
+            return res.status(500).json({ error: 'Server configuration error' });
+        }
 
         // Get location from IP
         let location = 'Unknown';
         try {
-            const geoResponse = await axios.get(`http://ip-api.com/json/${clientIP}`);
-            if (geoResponse.data.status === 'success') {
-                location = `${geoResponse.data.city}, ${geoResponse.data.country}`;
+            const geoResponse = await fetch(`http://ip-api.com/json/${clientIP}`);
+            const geoData = await geoResponse.json();
+            if (geoData.status === 'success') {
+                location = `${geoData.city}, ${geoData.country}`;
             }
         } catch (geoError) {
             console.log('Geolocation failed:', geoError.message);
         }
 
         let logMessage;
-        
+
         if (isSessionEnd) {
             // Format for session end
-            logMessage = `
-📊 User Session Summary
+            logMessage = `📊 User Session Summary
 Entry: ${clientData.entryTime}
 Exit: ${clientData.exitTime}
 Duration: ${clientData.duration}
@@ -37,12 +47,10 @@ Page: ${clientData.pageURL}
 Device: ${clientData.deviceType} (${clientData.browser} on ${clientData.os})
 Screen: ${clientData.screenSize}
 Language: ${clientData.language}
-IP: ${clientIP} (${location})
-            `.trim();
+IP: ${clientIP} (${location})`;
         } else {
             // Format for individual activity
-            logMessage = `
-🔔 New Activity Log
+            logMessage = `🔔 New Activity Log
 Page: ${clientData.pageURL || 'Unknown'}
 Referrer: ${clientData.referrer || 'Direct'}
 Device: ${clientData.deviceType} (${clientData.browser} on ${clientData.os})
@@ -50,23 +58,31 @@ Screen: ${clientData.screenSize}
 Language: ${clientData.language}
 IP: ${clientIP} (${location})
 Button: "${clientData.buttonText || 'Unknown'}"
-Time: ${clientData.timestamp}
-            `.trim();
+Time: ${clientData.timestamp}`;
         }
 
-        // Send to Telegram
-        const telegramURL = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
-        await axios.post(telegramURL, {
-            chat_id: process.env.TELEGRAM_CHAT_ID,
-            text: logMessage,
-            parse_mode: 'Markdown'
+        // Send to Telegram using fetch
+        const telegramURL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        const telegramResponse = await fetch(telegramURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: logMessage,
+                parse_mode: 'Markdown'
+            })
         });
 
-        res.status(200).json({ success: true });
+        const telegramData = await telegramResponse.json();
+
+        if (!telegramData.ok) {
+            console.error('Telegram API error:', telegramData);
+            return res.status(500).json({ error: 'Failed to send Telegram message' });
+        }
+
+        res.status(200).json({ success: true, messageId: telegramData.result.message_id });
     } catch (error) {
         console.error('Telegram log error:', error.message);
-        res.status(500).json({ error: 'Failed to log' });
+        res.status(500).json({ error: 'Failed to log', details: error.message });
     }
-});
-
-module.exports = router;
+};
