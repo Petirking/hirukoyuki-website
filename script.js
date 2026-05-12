@@ -42,25 +42,27 @@ function generateRandomOrderNumber() {
 // Generate product ID with dynamic order number and optional price override
 function getProductId(name, priceCode = null) {
     const baseId = productIds[name];
-    
-    if (!baseId) {
-        if (name.startsWith('Topup')) {
-            return generateTopupProductId(name, priceCode);
+
+    if (baseId) {
+        if (baseId.includes('-')) {
+            const parts = baseId.split('-');
+            if (parts.length === 4) {
+                parts[3] = generateRandomOrderNumber();
+                return parts.join('-');
+            }
         }
-        return 'HYX-0000-000-' + generateRandomOrderNumber();
+
+        return baseId;
     }
 
-    // Replace the last segment (order number) with a new random number
-    if (baseId.includes('-')) {
-        const parts = baseId.split('-');
-        if (parts.length === 4) {
-            // Replace the last order number with a new random one
-            parts[3] = generateRandomOrderNumber();
-            return parts.join('-');
-        }
+    const topupMatch = name.match(/^Topup\s+(.+?)\s*-\s*RM(\d+(?:\.\d+)?)$/i);
+    if (topupMatch) {
+        const provider = topupMatch[1].trim();
+        const amount = priceCode || String(Math.round(parseFloat(topupMatch[2]))).padStart(3, '0');
+        return generateTopupProductId(provider, amount);
     }
 
-    return baseId;
+    return 'HYX-0000-000-' + generateRandomOrderNumber();
 }
 
 // Generate topup product IDs with dynamic pricing
@@ -266,19 +268,15 @@ function renderCartItems() {
     cartTotalEl.innerHTML = breakdownHTML;
 }
 
-function addItemToCart(name, price, quantity = 1, productId = null) {
-    productId = productId || getProductId(name);
+function addItemToCart(name, price, quantity = 1) {
     const existingItem = cartState.items.find(item => item.name === name);
     if (existingItem) {
         existingItem.quantity += quantity;
         if (existingItem.quantity > 999) {
             existingItem.quantity = 999;
         }
-        if (!existingItem.productId) {
-            existingItem.productId = productId;
-        }
     } else {
-        cartState.items.push({ name, price: Number(price), quantity: quantity, productId });
+        cartState.items.push({ name, price: Number(price), quantity: quantity });
     }
     updateCartCount();
     renderCartItems();
@@ -414,11 +412,11 @@ function initCart() {
             const messageLines = ['Hii Yukiee! 👋', 'Saya nak buat order:', ''];
             const totalAmount = cartState.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
             cartState.items.forEach((item, index) => {
-                const productId = item.productId || getProductId(item.name);
+                const productids = item.productId || getProductId(item.name);
                 messageLines.push(`${index + 1}. ${item.name}`);
                 messageLines.push(`Price: RM${item.price}`);
                 messageLines.push(`Quantity: ${item.quantity}`);
-                messageLines.push(`Product ID: ${productId}`);
+                messageLines.push(`Product ID: ${productids}`);
                 messageLines.push('');
             });
             messageLines.push('Payment: Manual Payment');
@@ -723,9 +721,7 @@ topupAddToCartBtn.addEventListener('click', function() {
     }
     
     const itemName = `Topup ${currentTopupSelection.provider} - RM${currentTopupSelection.amount.toFixed(0)}`;
-    const priceCode = String(Math.round(currentTopupSelection.amount)).padStart(3, '0');
-    const productId = generateTopupProductId(currentTopupSelection.provider, priceCode);
-    addItemToCart(itemName, currentTopupSelection.amount, currentTopupSelection.quantity, productId);
+    addItemToCart(itemName, currentTopupSelection.amount, currentTopupSelection.quantity);
     closeTopupModal();
 });
 
