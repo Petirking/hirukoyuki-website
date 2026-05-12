@@ -412,11 +412,11 @@ function initCart() {
             const messageLines = ['Hii Yukiee! 👋', 'Saya nak buat order:', ''];
             const totalAmount = cartState.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
             cartState.items.forEach((item, index) => {
-                const productids = item.productId || getProductId(item.name);
+                const productId = getProductId(item.name);
                 messageLines.push(`${index + 1}. ${item.name}`);
                 messageLines.push(`Price: RM${item.price}`);
                 messageLines.push(`Quantity: ${item.quantity}`);
-                messageLines.push(`Product ID: ${productids}`);
+                messageLines.push(`Product ID: ${productId}`);
                 messageLines.push('');
             });
             messageLines.push('Payment: Manual Payment');
